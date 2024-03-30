@@ -15,7 +15,7 @@ const APP_DOMAIN = process.env.APP_DOMAIN as string
 
 // Only support GET, dovecot should never POST
 export async function GET(req: NextRequest, res: NextResponse) {
-    console.log('imapGrant:')
+    console.log('imapGrant: ')
 
     // Get access_token from request
     const access_token = req.nextUrl.searchParams.get('access_token')

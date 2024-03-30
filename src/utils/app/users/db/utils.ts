@@ -9,18 +9,13 @@ export async function getMwaUser(address: string): Promise<MwaUser|undefined> {
 }
 
 export async function createMwaUser(address: string): Promise<MwaUser|undefined> {
-  console.log('Creating user: ',address)
   const userCheck = getMwaUser(address)
   if(!userCheck) return undefined  // User exists
-  console.log('User doesn\'t exist, continuing')
   const insertUserQuery = 'INSERT INTO USERS (address) VALUES (\''+address+'\')'
-  console.log('Insert Query: ',insertUserQuery)
   const insertUserRes = await dbConn.query(insertUserQuery)
   if (insertUserRes.rowCount == 0) return undefined // Failed Insert
-  console.log('User created')
   const newDBUser = await getMwaUser(address)
   if (!newDBUser) return undefined  // Failed get
-  console.log('Found new user')
   return newDBUser as MwaUser
 }
 

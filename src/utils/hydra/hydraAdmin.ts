@@ -13,7 +13,7 @@ export const OAUTH_CONSENT_SKIP = true
 
 // For generating OAuthClientToken
 // This is also called on /api/acceptConsent
-export async function genOAuthClientToken(
+export function genOAuthClientToken(
 	user: MwaUser
 ) {
 	const token: OAuthClientToken = {

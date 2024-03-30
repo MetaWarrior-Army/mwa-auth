@@ -5,12 +5,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt"
 import { getMwaUser } from '@/utils/app/users/db/utils';
 import { MwaUser } from '@/utils/app/users/types';
+import { AppSessionToken } from '../../../utils/app/users/types';
 
 // Only accept POST
 export async function POST(req: NextRequest, res: NextResponse) {
+  console.log('rejectConsent: ')
   
   // Get Secure Server Session (Next-Auth)
-  const token = await getToken({ req })
+  const token = await getToken({ req }) as AppSessionToken
   if(!token) return NextResponse.json({error:'No session token',status:500})
   
   // Get the login_challenge and wallet from the request

@@ -1,6 +1,8 @@
 import CredentialsProvider from "next-auth/providers/credentials"
 import { SiweMessage } from 'siwe'
-import { NextAuthOptions } from "next-auth";
+import { NextAuthOptions } from 'next-auth'
+import { createMwaUser, getMwaUser } from '../app/users/db/utils'
+//import { MwaUser } from '../app/types'
 
 // Private
 const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET as string
@@ -22,6 +24,7 @@ export const SIWEProvider = CredentialsProvider({
     },
   },
   async authorize(credentials) {
+    console.log('signIn: ')
     try {
       const siwe = new SiweMessage(JSON.parse(credentials?.message || "{}"))
       const nextAuthUrl = new URL(NEXTAUTH_URL)
@@ -30,14 +33,31 @@ export const SIWEProvider = CredentialsProvider({
         signature: credentials?.signature || "",
         domain: nextAuthUrl.host,
       })
-
+      
+      // Authentication successful, check for existing user or create one if needed
       if (result.success) {
+        let user
+        const userCheck = await getMwaUser(siwe.address)
+        // Create new user
+        if(!userCheck) {
+          const newUser = await createMwaUser(siwe.address)
+          if(!newUser) return null
+          user = newUser
+        }
+        else{
+          user = userCheck
+        }
+
+        // return SessionToken
         return {
-          id: siwe.address,
+          id: user.address,
+          user: user,
         }
       }
+      console.log(result)
       return null
     } catch (e) {
+      console.log(e)
       return null
     }
   },

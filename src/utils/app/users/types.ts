@@ -10,3 +10,8 @@ export type MwaUser = {
   invite_code?: string,
   num_referrals?: number
 }
+
+export type AppSessionToken = {
+  id: string,
+  user: MwaUser
+}

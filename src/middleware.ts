@@ -65,7 +65,6 @@ export async function middleware(req: NextRequest) {
     if(!consentRequest) return NextResponse.json({error:'Failed to get consent request',status:500})
     if(consentRequest.redirect_to) return NextResponse.redirect(consentRequest.redirect_to)
     // Get MwaUser from /api
-    let user: MwaUser
     const getUserReq = await fetch('https://auth.metawarrior.army//api/getMwaUser',{
       method: 'POST',
       headers: {'Content-type':'application/json'},
@@ -73,40 +72,18 @@ export async function middleware(req: NextRequest) {
     })
     const mwaUser = await getUserReq.json()
     if(!mwaUser) return NextResponse.json({error:'Failed to interact with /api/getMwaUser',status:500})
-    // Create User
-    if(mwaUser.error){
-      console.log('middleware: /consent: creating user')
-      const createReq = await fetch('https://auth.metawarrior.army//api/createMwaUser',{
-        method: 'POST',
-        headers: {'Content-type':'application/json'},
-        body: JSON.stringify({secret: SECRET_HASH, address: consentRequest.subject})
-      })
-      const newUser = await createReq.json()
-      if(!newUser) return NextResponse.json({error:'Failed to interact with /api/createMwaUser',status:500})
-      if(newUser.error) return NextResponse.json({error:newUser.error,status:500})
-      // Created User
-      user = newUser
-    }
-    else{
-      user = mwaUser
-    }
-    console.log('Found user')
     // Build the response
     const resp = NextResponse.next()
     resp.cookies.delete('redirect_to')
-    if(user.email_active) resp.cookies.set('username',user.username as string)
     resp.cookies.set('oauth_client_name',consentRequest.client.client_name)
     resp.cookies.set('oauth_logo_uri',consentRequest.client.logo_uri)
     resp.cookies.set('consent_challenge',consentRequest.challenge)
     // Are we being asked to skip?
-    //if(consentRequest.skip){
     if(consentRequest.skip || consentRequest.client.skip_consent){
       console.log('skipping consent')
       // generate tokenData
-      const tokenData = await genOAuthClientToken(user)
-      console.log('generated token data')
+      const tokenData = genOAuthClientToken(mwaUser)
       // Accept consent
-      console.log('Accepting consent')
       const acceptReq = await acceptOAuth2ConsentRequest(consentRequest.challenge,{
         grant_scope: consentRequest.requested_scope,
         remember: OAUTH_CONSENT_SKIP, 
