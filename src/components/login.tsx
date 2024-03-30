@@ -5,7 +5,10 @@ import { useRouter } from "next/navigation"
 import Cookies from 'js-cookie'
 import { ConnectWalletModal } from './web3'
 
-export function LoginModal() {
+export function LoginModal({client, redirect}:{
+  client: string,
+  redirect: string | undefined,
+}) {
   const { address } = useAccount()
   const { isConnected } = useAccount()
   const { signMessageAsync } = useSignMessage()
@@ -34,16 +37,25 @@ export function LoginModal() {
     if(!signinResult) return false
     // If signin successful, accept login and redirect    
     if(signinResult.ok){
-      // Session established, ping secure API endpoint      
-      const acceptReq = await fetch('/api/acceptLogin',{
-        method: 'POST',
-        headers: {'Content-type':'application/json'},
-        body: JSON.stringify({login_challenge: cookies.login_challenge, address: address})
-      })
-      const acceptRes = await acceptReq.json()
-      if(!acceptRes) throw Error('Failed to get result from /api/acceptLogin')
-      if(acceptRes.error) throw Error(acceptRes.error)
-      router.push(acceptRes.redirect_to)
+
+      // Are we logging in for OAuth?
+      if(client == 'oauth'){
+        // Session established, ping secure API endpoint      
+        const acceptReq = await fetch('/api/acceptLogin',{
+          method: 'POST',
+          headers: {'Content-type':'application/json'},
+          body: JSON.stringify({login_challenge: cookies.login_challenge, address: address})
+        })
+        const acceptRes = await acceptReq.json()
+        if(!acceptRes) throw Error('Failed to get result from /api/acceptLogin')
+        if(acceptRes.error) throw Error(acceptRes.error)
+        router.push(acceptRes.redirect_to)
+      }
+
+      // App Login
+      else{
+        router.push(redirect as string)
+      }
     }
     
     return true;

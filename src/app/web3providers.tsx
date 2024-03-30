@@ -6,17 +6,14 @@ import { injected, walletConnect, coinbaseWallet } from 'wagmi/connectors'
 import { useState, type ReactNode } from 'react'
 
 const projectId = '4bacdb3e525e8b52bd47677842435182'
-
-// Public
-const WALLETCONNECT_PROJECTID = process.env.WALLETCONNECT_PROJECTID as string
-const PROJECT_NAME = process.env.PROJECT_NAME as string
+const projectName = 'MetaWarrior Army'
 
 export const wagmiConfig = createConfig({
   chains: [mainnet ],
   connectors: [
     walletConnect({ projectId }),
     coinbaseWallet({
-        appName: PROJECT_NAME,
+        appName: projectName,
       }),
     injected(),
   ],

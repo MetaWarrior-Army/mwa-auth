@@ -14,7 +14,7 @@ export default function LoginPage() {
     <Modal>
       <ProfileBanner />
 
-      <LoginModal/>
+      <LoginModal client='oauth' redirect=''/>
       
       <QuestionsBanner/>
     </Modal>

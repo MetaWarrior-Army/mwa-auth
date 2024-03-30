@@ -10,14 +10,17 @@ import { getOAuth2LoginRequest,
   OAUTH_LOGIN_SKIP,
   genOAuthClientToken
 } from './utils/hydra/hydraAdmin'
-import { MwaUser } from '@/utils/app/users/types'
 import { sha512 } from '@/utils/sha512'
+import { AppSessionToken } from '@/utils/app/users/types'
 
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { getToken } from 'next-auth/jwt'
 
 // Private
 const PRIVATE_API_KEY = process.env.PRIVATE_API_KEY as string
+// Public
+const APP_DOMAIN = process.env.APP_DOMAIN as string
 
 // Middleware
 export async function middleware(req: NextRequest) {
@@ -113,6 +116,34 @@ export async function middleware(req: NextRequest) {
     // Redirect user
     return NextResponse.redirect(new URL(acceptRequest.redirect_to,req.url))
   }
+
+  // Middleware for /mfa
+  else if (req.nextUrl.pathname.startsWith('/mfa')) {
+    console.log('middleware: /mfa')
+    // Check for active session
+    const sessionToken = await getToken({req}) as AppSessionToken
+    if(!sessionToken){
+      // Send user to /signin with redirect
+      const resp = NextResponse.redirect(new URL('/signin',req.url))
+      // Come back after authenticating
+      resp.cookies.set('signin_redirect_to','https://'+APP_DOMAIN+'/mfa')
+      return resp
+    }
+    else{
+      return NextResponse.next()
+
+    }
+  }
+
+  // Middleware for /signout
+  else if(req.nextUrl.pathname.startsWith('/signout')) {
+    console.log('middleware: /signout')
+    // We need to get a redirect_to from the query parameters
+    const redirect_to = req.nextUrl.searchParams.get('redirect_to')
+    const resp = NextResponse.next()
+    resp.cookies.set('signout_redirect_to',redirect_to as string)
+    return resp
+  }
 }
 
 
@@ -123,6 +154,9 @@ export const config = {
      * - login
      * - consent
      * - logout
+     * - signin
+     * - signout
+     * - mfa
      * NOT:
      * - api (API routes)
      * - _next
@@ -131,7 +165,7 @@ export const config = {
      * - favicon.ico (favicon file)
      */
     {
-      source: '/((?!api|_next|_next\/static|_next\/image|favicon.ico))(login|consent|logout)',
+      source: '/((?!api|_next|_next\/static|_next\/image|favicon.ico))(login|consent|logout|mfa|signin|signout)',
       missing: [
         { type: 'header', key: 'next-router-prefetch' },
         { type: 'header', key: 'purpose', value: 'prefetch' },

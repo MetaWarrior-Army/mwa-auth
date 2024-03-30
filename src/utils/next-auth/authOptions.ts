@@ -2,7 +2,7 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { SiweMessage } from 'siwe'
 import { NextAuthOptions } from 'next-auth'
 import { createMwaUser, getMwaUser } from '../app/users/db/utils'
-//import { MwaUser } from '../app/types'
+import { MwaUser } from '../app/users/types'
 
 // Private
 const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET as string
@@ -36,7 +36,7 @@ export const SIWEProvider = CredentialsProvider({
       
       // Authentication successful, check for existing user or create one if needed
       if (result.success) {
-        let user
+        let user: MwaUser
         const userCheck = await getMwaUser(siwe.address)
         // Create new user
         if(!userCheck) {

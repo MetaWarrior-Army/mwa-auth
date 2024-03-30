@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "MetaWarrior Army",
-  description: "Login to MetaWarrior Army",
+  description: "MetaWarrior Army",
 };
 
 export default function RootLayout({
