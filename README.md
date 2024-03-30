@@ -17,7 +17,7 @@ A Custom UI for authenticating with an OAuth2/OpenID server providing a Web3 aut
 - `react-blockies` for user profile images
 - `js-cookie` for the help client side
 
-## Notes:-
+## Notes:
 
 This serves as the custom UI for an OAuth2/OpenID Identity Provider. As such, not all OAuth implementations are created equal. Ory Hydra has it's quirks, but if you follow best practices and the `.well-known/openid-configuration` you'll be fine. 
 
