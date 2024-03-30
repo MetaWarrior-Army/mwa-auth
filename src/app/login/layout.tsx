@@ -7,7 +7,7 @@ export default function LoginLayout({
 }>) {
   return (
       <Page>
-        <Header/>
+        <Header title="Login"/>
         <Frame>
           {children}
         </Frame>

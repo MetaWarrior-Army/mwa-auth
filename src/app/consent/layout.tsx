@@ -22,7 +22,7 @@ export default function ConsentLayout({
 
   return (
       <Page>
-        <Header/>
+        <Header title="Consent"/>
         <Frame>
           {children}
         </Frame>

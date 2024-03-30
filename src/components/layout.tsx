@@ -1,4 +1,5 @@
 import { ReactNode } from "react"
+import Image from 'next/image'
 
 export function Page(props: { children: ReactNode }) {
   return(
@@ -8,10 +9,20 @@ export function Page(props: { children: ReactNode }) {
   )
 }
 
-export function Header () {
+export function Header ({title}:{
+  title: string
+}) {
   return (
-    <p className="text-xl text-yellow-500">Login to <span className="text-lg font-bold">MetaWarrior Army</span></p> 
-  )
+    <div className="flex">
+      <div className="w-full text-start">
+        <Image src="https://www.metawarrior.army/media/img/logo.png" alt="github_icon" width={300} height={10}/>
+      </div>
+      <div className="text-xs text-slate-300 text-end font-bold w-full">
+        <p>{title}</p>
+      </div>
+      
+    </div>
+    )
 }
 
 export function Frame(props: { children: ReactNode }) {
@@ -28,6 +39,18 @@ export function Frame(props: { children: ReactNode }) {
 
 export function Footer () {
   return (
-    <p className="text-xs">home | terms of service | privacy policy | github</p>
+    <div className="text-xs flex align-top">
+      <a href="https://www.metawarrior.army" className="">
+        <Image src="https://www.metawarrior.army/media/img/icon.png" alt="mwa_icon" width={25} height={25}/>
+      </a> 
+      | 
+      <a href="https://www.metawarrior.army/privacy" className="text-yellow-500 hover:text-yellow-700">Privacy Policy</a> 
+      | 
+      <a href="https://www.metawarrior.army/tos" className="text-yellow-500 hover:text-yellow-700">Terms of Service</a> 
+      | 
+      <a href="https://github.com/metawarrior-army" className="" target="_blank">
+        <Image src="https://www.metawarrior.army/media/img/github-mark.png" alt="github_icon" width={25} height={25}/>
+      </a>
+    </div>
   )
 }
