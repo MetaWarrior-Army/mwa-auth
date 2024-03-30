@@ -23,3 +23,8 @@ There's a special API endpoint called `imapGrant` created for older clients of t
 
 We use Wagmi/Viem for interacting with user's wallets. We attempt to provide the best experience allowing users to connect with as many wallets as possible, but might not support all wallets due to limited testing capabilities or the wallet provider's limited support for Wagmi/Viem. 
 
+## Screenshots
+
+![connect wallet](https://github.com/MetaWarrior-Army/mwa-auth/blob/main/docs/images/mwa-auth-scrot1.png?raw=true)
+![login](https://github.com/MetaWarrior-Army/mwa-auth/blob/main/docs/images/mwa-auth-scrot2.png?raw=true)
+![consent](https://github.com/MetaWarrior-Army/mwa-auth/blob/main/docs/images/mwa-auth-scrot3.png?raw=true)
