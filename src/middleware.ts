@@ -90,7 +90,7 @@ export async function middleware(req: NextRequest) {
     else{
       user = mwaUser
     }
-    console.log('Found user: ', user)
+    console.log('Found user')
     // Build the response
     const resp = NextResponse.next()
     resp.cookies.delete('redirect_to')

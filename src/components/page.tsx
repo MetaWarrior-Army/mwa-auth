@@ -4,7 +4,7 @@ export function QuestionsBanner() {
   return (
     <div className="pt-8 text-base font-semibold leading-7">
       <p className="text-slate-200">Questions?</p>
-      <p><a href="#" className="text-yellow-500 hover:text-sky-600">Answers &rarr;</a></p>
+      <p><a href="#" className="text-yellow-500 hover:text-yellow-700">Answers &rarr;</a></p>
     </div>
   )
 }

@@ -11,10 +11,17 @@ export function ProfileBanner() {
   const { isConnected, address } = useAccount()
   const { data: ensName } = useEnsName({ address })
   //const { data: ensAvatar } = useEnsAvatar({ name: ensName! })
+  function sliceWallet(wallet: string) {
+    if (wallet) {
+      return wallet.slice(0, 6) + '...' + wallet.slice(-4)
+    }
+  }
   return(
     <div className="text-base leading-7 dark:text-slate-400" id="avatar" hidden={isConnected ? false : true} >
-      <Blockies seed={address ? address.toLowerCase(): ''} size={8} scale={8} className="rounded-lg shadow-xl"/>
-      {address && <p className="text-yellow-500">{ensName ? `${ensName} (${address})` : address}</p>}
+      <div className="p-2">
+        <Blockies seed={address ? address.toLowerCase(): ''} size={8} scale={8} className="rounded-lg shadow-xl"/>
+      </div>
+      {address && <p className="text-yellow-500">{ensName ? `${ensName} (${sliceWallet(address)})` : sliceWallet(address)}</p>}
       <p className="text-xs">Wallet Connected</p>
     </div>
   )
