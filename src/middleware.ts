@@ -79,7 +79,7 @@ export async function middleware(req: NextRequest) {
       const createReq = await fetch('https://auth.metawarrior.army//api/createMwaUser',{
         method: 'POST',
         headers: {'Content-type':'application/json'},
-        body: JSON.stringify({secret: SECRET_HASH, user: {address: consentRequest.subject}})
+        body: JSON.stringify({secret: SECRET_HASH, address: consentRequest.subject})
       })
       const newUser = await createReq.json()
       if(!newUser) return NextResponse.json({error:'Failed to interact with /api/createMwaUser',status:500})
