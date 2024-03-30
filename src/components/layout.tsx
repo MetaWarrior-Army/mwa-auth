@@ -2,7 +2,7 @@ import { ReactNode } from "react"
 
 export function Page(props: { children: ReactNode }) {
   return(
-    <main className="flex font-mono min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex font-mono min-h-screen flex-col items-center justify-between p-5">
       {props.children}
     </main>
   )
