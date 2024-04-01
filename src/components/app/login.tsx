@@ -50,7 +50,7 @@ export function LoginModal({client, redirect, authType}:{
         // Are we logging in for OAuth?
         if(client == 'oauth'){
           // Session established, ping secure API endpoint      
-          const acceptReq = await fetch('/api/acceptLogin',{
+          const acceptReq = await fetch('/api/oauth/acceptLogin',{
             method: 'POST',
             headers: {'Content-type':'application/json'},
             body: JSON.stringify({login_challenge: cookies.login_challenge, address: address})

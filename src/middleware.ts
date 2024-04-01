@@ -67,7 +67,7 @@ export default async function middleware(req: NextRequest) {
     if(!consentRequest) return NextResponse.json({error:'Failed to get consent request',status:500})
     if(consentRequest.redirect_to) return NextResponse.redirect(consentRequest.redirect_to)
     // Get MwaUser from /api
-    const getUserReq = await fetch('https://auth.metawarrior.army//api/getMwaUser',{
+    const getUserReq = await fetch('https://'+APP_DOMAIN+'/api/getMwaUser',{
       method: 'POST',
       headers: {'Content-type':'application/json'},
       body: JSON.stringify({secret: SECRET_HASH, address: consentRequest.subject})
@@ -114,6 +114,20 @@ export default async function middleware(req: NextRequest) {
     if(!acceptRequest) return NextResponse.json({error:'Failed to accept logout request',status:500})
     // Redirect user
     return NextResponse.redirect(new URL(acceptRequest.redirect_to,req.url))
+  }
+
+  // Middleware for /siwe/verified redirect to /mfa/verify once wallet verified
+  else if (req.nextUrl.pathname.startsWith('/siwe\/verified')) {
+    console.log('middleware: /siwe/verified')
+    // Check for active session
+    const sessionToken = await getToken({req}) as AppSessionToken
+    if(!sessionToken){
+      // Send user to /siwe with redirect
+      const resp = NextResponse.redirect(new URL('/siwe',req.url))
+      resp.cookies.set('verify_redirect_to','https://'+APP_DOMAIN+'/siwe/verified')
+      return resp
+    }
+    return NextResponse.next()
   }
 
   // Middleware for /mfa/verify/verified
@@ -167,6 +181,7 @@ export const config = {
      * - signin
      * - signout
      * - mfa
+     * - siwe/verified
      * NOT:
      * - api (API routes)
      * - _next
@@ -175,7 +190,7 @@ export const config = {
      * - favicon.ico (favicon file)
      */
     {
-      source: '/((?!api|_next|_next\/static|_next\/image|favicon.ico))(login|consent|logout|mfa|mfa\/verify\/verified|signin|signout)',
+      source: '/((?!api|_next|_next\/static|_next\/image|favicon.ico))(login|consent|logout|mfa|mfa\/verify\/verified|siwe\/verified|signin|signout)',
       missing: [
         { type: 'header', key: 'next-router-prefetch' },
         { type: 'header', key: 'purpose', value: 'prefetch' },

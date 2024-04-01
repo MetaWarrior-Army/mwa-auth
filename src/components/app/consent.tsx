@@ -8,7 +8,7 @@ export function ConsentModal({ clientName, consentChallenge, logoUri}: {
 
   // User consents
   async function consent() {
-    const acceptReq = await fetch('/api/acceptConsent', {
+    const acceptReq = await fetch('/api/oauth/acceptConsent', {
       method: 'POST',
       headers: {'Content-type':'application/json'},
       body: JSON.stringify({consent_challenge: consentChallenge})
@@ -22,7 +22,7 @@ export function ConsentModal({ clientName, consentChallenge, logoUri}: {
 
   // User disagrees
   async function disagree() {
-    const rejectReq = await fetch('/api/rejectConsent', {
+    const rejectReq = await fetch('/api/oauth/rejectConsent', {
       method: 'POST',
       headers: {'Content-type':'application/json'},
       body: JSON.stringify({consent_challenge: consentChallenge})

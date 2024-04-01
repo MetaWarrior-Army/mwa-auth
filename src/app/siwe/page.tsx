@@ -2,7 +2,7 @@
 
 import { QuestionsBanner, Modal } from '@/components/app/page'
 import { ProfileBanner } from '@/components/web3/web3'
-import { LoginModal } from '@/components/app/login'
+import { SIWEVerifyModal } from '@/components/siwe/verify'
 import Web3Providers  from '@/app/web3providers'
 import {useState,useEffect} from 'react'
 import Cookies from 'js-cookie'
@@ -27,7 +27,7 @@ export default function SIWEPage() {
       <ProfileBanner />
       <p>Verify your Passkey or Security Key.</p>
 
-      <LoginModal client='signin' redirect={redirect} authType='siwe'/>
+      <SIWEVerifyModal redirect={'/mfa/verify'} />
       
       <QuestionsBanner/>
     </Modal>
