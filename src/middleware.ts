@@ -4,26 +4,25 @@ import { getOAuth2LoginRequest,
   acceptOAuth2ConsentRequest,
   getOAuth2LogoutRequest,
   acceptOAuth2LogoutRequest,
-  OAUTH_CONSENT_REMEMBER,
+  genOAuthClientToken
+} from '@/utils/hydra/admin'
+import {OAUTH_CONSENT_REMEMBER,
   OAUTH_CONSENT_SKIP,
   OAUTH_LOGIN_REMEMBER,
-  OAUTH_LOGIN_SKIP,
-  genOAuthClientToken
-} from './utils/hydra/hydraAdmin'
+  OAUTH_LOGIN_SKIP
+} from '@/utils/hydra/constants'
 import { sha512 } from '@/utils/sha512'
-import { AppSessionToken } from '@/utils/app/users/types'
-
+import { AppSessionToken } from '@/utils/app/types'
+import {APP_DOMAIN} from '@/utils/app/constants'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { getToken } from 'next-auth/jwt'
-
 // Private
 const PRIVATE_API_KEY = process.env.PRIVATE_API_KEY as string
-// Public
-const APP_DOMAIN = process.env.APP_DOMAIN as string
+
 
 // Middleware
-export async function middleware(req: NextRequest) {
+export default async function middleware(req: NextRequest) {
 
 
   // Middleware for /login
@@ -129,10 +128,7 @@ export async function middleware(req: NextRequest) {
       resp.cookies.set('signin_redirect_to','https://'+APP_DOMAIN+'/mfa')
       return resp
     }
-    else{
-      return NextResponse.next()
-
-    }
+    return NextResponse.next()
   }
 
   // Middleware for /signout

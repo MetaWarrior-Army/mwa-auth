@@ -1,15 +1,12 @@
-import { MwaUser } from '@/utils/app/users/types'
+import { MwaUser } from '@/utils/app/types'
 import { OAuthClientToken } from "./types"
-
-
-// Private
-const HYDRA_ADMIN_URL = process.env.HYDRA_ADMIN_URL as string
-const MAIL_DOMAIN = process.env.MAIL_DOMAIN as string
-
-export const OAUTH_LOGIN_REMEMBER = 60
-export const OAUTH_LOGIN_SKIP = true
-export const OAUTH_CONSENT_REMEMBER = 60
-export const OAUTH_CONSENT_SKIP = true
+import {MAIL_DOMAIN} from '@/utils/mail/constants'
+import {HYDRA_ADMIN_URL,
+	OAUTH_LOGIN_REMEMBER,
+	OAUTH_LOGIN_SKIP,
+	OAUTH_CONSENT_REMEMBER,
+	OAUTH_CONSENT_SKIP
+} from './constants'
 
 // For generating OAuthClientToken
 // This is also called on /api/acceptConsent

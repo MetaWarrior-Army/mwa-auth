@@ -6,17 +6,14 @@
 // so we have to populate that as well.
 // This endpoint can only be secured by the access_token.
 // None of this is ideal
-
-import { getMailQuota } from "@/utils/mail/utils"
-
+import { getMailQuota } from "@/utils/mail/db/utils"
 import { NextRequest, NextResponse } from "next/server"
+import {APP_DOMAIN} from '@/utils/app/constants'
 
-const APP_DOMAIN = process.env.APP_DOMAIN as string
 
 // Only support GET, dovecot should never POST
 export async function GET(req: NextRequest, res: NextResponse) {
     console.log('imapGrant: ')
-
     // Get access_token from request
     const access_token = req.nextUrl.searchParams.get('access_token')
     if(!access_token) return NextResponse.json({error:'Invalid parameters',status:500})
@@ -32,29 +29,10 @@ export async function GET(req: NextRequest, res: NextResponse) {
     })
     const userTokenRes = await userTokenReq.json()
     if(!userTokenRes || userTokenRes.error) return NextResponse.json({error:'Failed to get user information',status:500})
-
-    // Example response
-    /*
-    {
-        address: '-',
-        aud: [ '-' ],
-        auth_time: 1701149213,
-        email: '-@example.com',
-        iat: 1701149296,
-        iss: 'https://auth.example.com',
-        rat: 1701149295,
-        sub: '-',
-        userTokenRes: '-',
-        username: '-',
-        using: 'id_token'
-    }
-    */
-
-    // Now we need to get quota information from the Mail Server
+    // Get Mailbox Quota
     const quotaRule = await getMailQuota(userTokenRes.email)
     if(!quotaRule) return NextResponse.json({error:'Failed to get quota rule',status:500})
-
-    // Rebuild return object for Dovecot IMAP
+    // Build return object
     const returnObj = {
         auth_time: userTokenRes.auth_time,
         email: userTokenRes.email,
@@ -67,6 +45,6 @@ export async function GET(req: NextRequest, res: NextResponse) {
         quota_rule: quotaRule,
         active: true
     };
-
+    // Return response
     return NextResponse.json(returnObj)
 }

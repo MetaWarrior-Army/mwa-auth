@@ -1,8 +1,8 @@
+import { createMwaUser, getMwaUser } from '@/utils/app/db/utils'
+import { MwaUser } from '@/utils/app/types'
 import CredentialsProvider from "next-auth/providers/credentials"
 import { SiweMessage } from 'siwe'
 import { NextAuthOptions } from 'next-auth'
-import { createMwaUser, getMwaUser } from '../app/users/db/utils'
-import { MwaUser } from '../app/users/types'
 
 // Private
 const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET as string

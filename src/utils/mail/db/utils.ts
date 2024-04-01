@@ -1,4 +1,4 @@
-import dbConn from "./db/conn"
+import dbConn from './conn'
 
 // Private
 const MAIL_DOMAIN = process.env.MAIL_DOMAIN as string

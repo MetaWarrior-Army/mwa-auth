@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
 import { sha512 } from '@/utils/sha512';
-import { getMwaUser } from '@/utils/app/users/db/utils';
+import { getMwaUser } from '@/utils/app/db/utils';
+import { NextRequest, NextResponse } from "next/server";
 
 // Private
 const PRIVATE_API_KEY = process.env.PRIVATE_API_KEY as string

@@ -8,7 +8,8 @@ export type MwaUser = {
   nft_0_tx?: string,
   email_active?: boolean,
   invite_code?: string,
-  num_referrals?: number
+  num_referrals?: number,
+  current_mfa_challenge?: string,
 }
 
 export type AppSessionToken = {
