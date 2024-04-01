@@ -8,15 +8,15 @@ import {useState,useEffect} from 'react'
 import Cookies from 'js-cookie'
 
 // Login
-export default function SigninPage() {
+export default function VerifyMfaPage() {
   const [redirect,setRedirect] = useState('')
   const cookies = Cookies.get()
 
   useEffect(() => {
     if(redirect == ''){
-      if(cookies.signin_redirect_to){
-        setRedirect(cookies.signin_redirect_to)
-        console.log('Set redirect to: '+cookies.signin_redirect_to)
+      if(cookies.verify_redirect_to){
+        setRedirect(cookies.verify_redirect_to)
+        console.log('Set redirect to: '+cookies.verify_redirect_to)
       }
     }
   },[redirect,cookies])
@@ -25,8 +25,9 @@ export default function SigninPage() {
     <Web3Providers>
     <Modal>
       <ProfileBanner />
+      <p>Verify your Passkey or Security Key.</p>
 
-      <LoginModal client='signin' redirect={redirect} authType='siwe'/>
+      <LoginModal client='signin' redirect={redirect} authType='mfa'/>
       
       <QuestionsBanner/>
     </Modal>

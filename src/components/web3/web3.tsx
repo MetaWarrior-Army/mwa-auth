@@ -27,7 +27,9 @@ export function ProfileBanner() {
   )
 }
 
-export function ConnectWalletModal() {
+export function ConnectWalletModal({showDisconnect}:{
+  showDisconnect: boolean
+}) {
   const { address, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
   const { connectors, connect } = useConnect()
@@ -82,10 +84,15 @@ export function ConnectWalletModal() {
         />
       ))}                     
     </div>
-
-    <div hidden={isConnected ? false : true}>
-      <button className="bg-slate-950 p-2 w-full text-slate-500 rounded-lg shadow-xl border-solid border-2 hover:border-dotted border-slate-500" onClick={() => disconnect()}>Disconnect Wallet</button>
+    <div>
+      {showDisconnect ? (
+          <div hidden={isConnected ? false : true}>
+            <button className="bg-slate-950 p-2 w-full text-slate-500 rounded-lg shadow-xl border-solid border-2 hover:border-dotted border-slate-500" onClick={() => disconnect()}>Disconnect Wallet</button>
+          </div>
+        ) : (<></>)
+      }
     </div>
+    
     </>
   )
 }

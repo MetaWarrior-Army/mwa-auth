@@ -1,12 +1,11 @@
 'use client'
+
+import { QuestionsBanner, Modal } from '@/components/app/page'
+import { ProfileBanner } from '@/components/web3/web3'
+import { ConsentModal } from '@/components/app/consent'
+import Web3Providers  from '@/app/web3providers'
 import Cookies from 'js-cookie'
 import { useState, useEffect } from 'react'
-
-import { QuestionsBanner, Modal } from '@/components/page'
-import { ProfileBanner } from '@/components/web3'
-import { ConsentModal } from '@/components/consent'
-import Web3Providers  from '../web3providers'
-
 
 export default function ConsentPage() {
   const cookies = Cookies.get()

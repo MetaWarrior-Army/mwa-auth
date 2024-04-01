@@ -10,9 +10,17 @@ export async function GET(req: NextRequest) {
   console.log('/api/mfa/verify: GET: ')
   // Get Session
   const token = await getToken({req}) as AppSessionToken
-  if(!token) return NextResponse.json({error:'Invalid Session',status:500})
+  let userid: string
+  if(!token) {
+    const address = req.nextUrl.searchParams.get('address')
+    if(!address) return NextResponse.json({error:'Invalid parameters',status:500})
+    userid = address
+  }
+  else{
+    userid = token.id
+  }
   // Get User
-  const user = await getMwaUser(token.id) as MwaUser
+  const user = await getMwaUser(userid) as MwaUser
   if(!user) return NextResponse.json({error:'Failed to find user',status:500})
   // Get Options
   const options = await getAuthenticationOptions(user)

@@ -29,7 +29,6 @@ export function VerifyMFAModal() {
       const verifyResponse = await startAuthentication(options)
       // Validate authentication results
       const authResponse = await verifyAuthentication(verifyResponse)
-      console.log(authResponse)
       if(authResponse.verified){
         toast.success('Key Verified!', {
           position: "top-right",

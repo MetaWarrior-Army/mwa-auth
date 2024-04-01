@@ -1,4 +1,4 @@
-import { Page, Header, Frame, Footer } from '@/components/layout'
+import { Page, Header, Frame, Footer } from '@/components/app/layout'
 
 export default function LoginLayout({
   children,

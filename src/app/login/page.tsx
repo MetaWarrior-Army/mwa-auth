@@ -1,10 +1,9 @@
 'use client'
 
-import { QuestionsBanner, Modal } from '@/components/page'
-import { ProfileBanner } from '@/components/web3'
-import { LoginModal } from '@/components/login'
-import Web3Providers  from '../web3providers'
-
+import { QuestionsBanner, Modal } from '@/components/app/page'
+import { ProfileBanner } from '@/components/web3/web3'
+import { LoginModal } from '@/components/app/login'
+import Web3Providers  from '@/app/web3providers'
 
 // Login
 export default function LoginPage() {
@@ -14,7 +13,7 @@ export default function LoginPage() {
     <Modal>
       <ProfileBanner />
 
-      <LoginModal client='oauth' redirect=''/>
+      <LoginModal client='oauth' redirect='' authType='siwe'/>
       
       <QuestionsBanner/>
     </Modal>

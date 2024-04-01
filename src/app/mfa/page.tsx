@@ -1,8 +1,8 @@
 'use client'
 
-import { QuestionsBanner, Modal, SignOutModal } from '@/components/page'
-import { ProfileBanner } from '@/components/web3'
-import Web3Providers  from '../web3providers'
+import { QuestionsBanner, Modal, SignOutModal } from '@/components/app/page'
+import { ProfileBanner } from '@/components/web3/web3'
+import Web3Providers  from '@/app/web3providers'
 import {VerifyMFAModal} from '@/components/mfa/verify'
 import {RegisterMFAModal} from '@/components/mfa/register'
 import {MAX_MFA_PER_USER} from '@/utils/mfa/constants'

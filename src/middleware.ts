@@ -116,6 +116,20 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL(acceptRequest.redirect_to,req.url))
   }
 
+  // Middleware for /mfa/verify/verified
+  else if (req.nextUrl.pathname.startsWith('/mfa\/verify\/verified')) {
+    console.log('middleware: /mfa/verify/verified')
+    // Check for active session
+    const sessionToken = await getToken({req}) as AppSessionToken
+    if(!sessionToken){
+      // Send user to /mfa/verify with redirect
+      const resp = NextResponse.redirect(new URL('/mfa/verify',req.url))
+      resp.cookies.set('verify_redirect_to','https://'+APP_DOMAIN+'/mfa/verify/verified')
+      return resp
+    }
+    return NextResponse.next()
+  }
+
   // Middleware for /mfa
   else if (req.nextUrl.pathname.startsWith('/mfa')) {
     console.log('middleware: /mfa')
@@ -161,7 +175,7 @@ export const config = {
      * - favicon.ico (favicon file)
      */
     {
-      source: '/((?!api|_next|_next\/static|_next\/image|favicon.ico))(login|consent|logout|mfa|signin|signout)',
+      source: '/((?!api|_next|_next\/static|_next\/image|favicon.ico))(login|consent|logout|mfa|mfa\/verify\/verified|signin|signout)',
       missing: [
         { type: 'header', key: 'next-router-prefetch' },
         { type: 'header', key: 'purpose', value: 'prefetch' },
