@@ -8,9 +8,10 @@ import {RegisterMFAModal} from '@/components/mfa/register'
 import {MAX_MFA_PER_USER} from '@/utils/mfa/constants'
 import {ShowKeyCount, RevokeAllKeysModal} from '@/components/mfa/page'
 import {useState,useEffect} from 'react'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // Public
 const APP_DOMAIN = 'auth.metawarrior.army'
-
 
 // Login
 export default function MfaPage() {
@@ -81,6 +82,7 @@ export default function MfaPage() {
       <SignOutModal redirect={signOutRedirect} />
       
     </Modal>
+    <ToastContainer/>
     </Web3Providers>
   )
 }

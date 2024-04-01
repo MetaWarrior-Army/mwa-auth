@@ -1,4 +1,5 @@
 import { startAuthentication } from '@simplewebauthn/browser'
+import { toast, Slide } from 'react-toastify'
 
 // Verify MFA Key
 export function VerifyMFAModal() {
@@ -22,18 +23,54 @@ export function VerifyMFAModal() {
   // Verify MFA Key
   async function verifyKey() {
     // Get Options
-    const options = await getAuthOptions()
-    // Start authentication with client
-    const verifyResponse = await startAuthentication(options)
-    // Validate authentication results
-    const authResponse = await verifyAuthentication(verifyResponse)
-    console.log(authResponse)
-    if(authResponse.verified){
-      alert('Key verified!')
+    try{
+      const options = await getAuthOptions()
+      // Start authentication with client
+      const verifyResponse = await startAuthentication(options)
+      // Validate authentication results
+      const authResponse = await verifyAuthentication(verifyResponse)
+      console.log(authResponse)
+      if(authResponse.verified){
+        toast.success('Key Verified!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Slide,
+        })
+      }
+      else{
+        toast.error(authResponse.verified, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Slide,
+        })
+      }
     }
-    else{
-      alert('Failed to verify key.')
+    catch(e: any) {
+      toast.error(e.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Slide,
+      })
     }
+    
   }
 
   return (

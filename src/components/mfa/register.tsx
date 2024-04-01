@@ -1,4 +1,5 @@
 import { startRegistration } from '@simplewebauthn/browser'
+import { toast, Slide } from 'react-toastify'
 
 // Register new MFA Key
 export function RegisterMFAModal({onRegister}: {onRegister: any}) {
@@ -25,21 +26,56 @@ export function RegisterMFAModal({onRegister}: {onRegister: any}) {
 
   // Register new Key
   async function registerNewKey() {
-    // Generate Options
-    const options = await generateOptions()
-    // Start Registration client-side
-    const attestationResponse = await startRegistration(options)
-    // Validate registration response
-    const registerResult = await register(attestationResponse)
-    console.log(registerResult)
-    if(registerResult.verified){
-      alert('New key registered!')
+    try{
+      // Generate Options
+      const options = await generateOptions()
+      // Start Registration client-side
+      const attestationResponse = await startRegistration(options)
+      // Validate registration response
+      const registerResult = await register(attestationResponse)
+      console.log(registerResult)
+      if(registerResult.verified){
+        toast.success('New Key Registered!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Slide,
+        })
+        // Update UI
+        onRegister()
+      }
+      else{
+        toast.error(registerResult.error, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Slide,
+        })
+      }
     }
-    else{
-      alert('Failed to register key')
+    catch(e: any){
+      toast.error(e.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Slide,
+      })
     }
-    // Update UI
-    onRegister()
   }
 
   return (
