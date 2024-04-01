@@ -1,5 +1,6 @@
 import dbConn from '@/utils/app/db/conn'
 import { MfaCredential } from '../types'
+import { MFA_DB_TABLE } from '../constants'
 
 
 // CREATE MFA CREDENTIAL 
@@ -9,7 +10,7 @@ export async function createMfaCredential(cred: MfaCredential) {
   const credId = Buffer.from(cred.credentialID).toString('base64url')
   const publicKey = Buffer.copyBytesFrom(cred.credentialPublicKey).toString('hex')
   // INSERT into database
-  const insertQuery = "INSERT INTO mfa_credentials (cred_id,cred_pkey,counter,device_type,backed_up,transports,user_address) VALUES ('"+credId+"','"+publicKey+"',"+cred.counter+",'"+cred.credentialDeviceType+"',"+cred.credentialBackedUp+",'"+transports+"','"+cred.user_address+"')"
+  const insertQuery = "INSERT INTO "+MFA_DB_TABLE+" (cred_id,cred_pkey,counter,device_type,backed_up,transports,user_address) VALUES ('"+credId+"','"+publicKey+"',"+cred.counter+",'"+cred.credentialDeviceType+"',"+cred.credentialBackedUp+",'"+transports+"','"+cred.user_address+"')"
   const insertRes = await dbConn.query(insertQuery)
   if(insertRes.rowCount == 0) return undefined
   return true
@@ -19,7 +20,7 @@ export async function createMfaCredential(cred: MfaCredential) {
 // GET MFA CREDENTIALS (MULTIPLE AS ARRAY)
 export async function getMfaCredentials(address: string) {
   // SELECT from database
-  const getCredQuery = "SELECT * FROM mfa_credentials WHERE user_address='"+address+"'"
+  const getCredQuery = "SELECT * FROM "+MFA_DB_TABLE+" WHERE user_address='"+address+"'"
   const getCredRes = await dbConn.query(getCredQuery)
   if(getCredRes.rowCount == 0) return []
   // Collect credentials
@@ -48,7 +49,7 @@ export async function getMfaCredentials(address: string) {
 // GET SINGLE CREDENTIAL AS MFACREDENTIAL
 export async function getMfaCredential(address: string, id: string) {
   // SELECT from database
-  const getCredQuery = "SELECT * FROM mfa_credentials WHERE user_address='"+address+"' AND cred_id='"+id+"'"
+  const getCredQuery = "SELECT * FROM "+MFA_DB_TABLE+" WHERE user_address='"+address+"' AND cred_id='"+id+"'"
   const getCredRes = await dbConn.query(getCredQuery)
   if(getCredRes.rowCount == 0) return undefined
   const cred = getCredRes.rows[0]
@@ -69,6 +70,13 @@ export async function getMfaCredential(address: string, id: string) {
   return credential as MfaCredential
 }
 
+export async function revokeMfaCredentials(address: string) {
+  // DELETE from database
+  const deleteQuery = "DELETE FROM "+MFA_DB_TABLE+" WHERE user_address='"+address+"'"
+  const deleteRes = await dbConn.query(deleteQuery)
+  if(deleteRes.rowCount == 0) return undefined
+  return true
+}
 
 // UPDATE MFA CURRENT CHALLENGE
 export async function updateMfaCurrentChallenge(address: string, challenge: string) {
@@ -83,7 +91,7 @@ export async function updateMfaCurrentChallenge(address: string, challenge: stri
 export async function updateMfaCredentialCounter(credentialID: Uint8Array, newCounter: number) {
   // Convert credId
   const credId = Buffer.from(credentialID).toString('base64url')
-  const updateQuery = "UPDATE mfa_credentials SET counter="+newCounter+" WHERE cred_id='"+credId+"'"
+  const updateQuery = "UPDATE "+MFA_DB_TABLE+" SET counter="+newCounter+" WHERE cred_id='"+credId+"'"
   const updateRes = await dbConn.query(updateQuery)
   if(updateRes.rowCount == 0) return undefined
   return true

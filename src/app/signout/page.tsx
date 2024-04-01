@@ -16,11 +16,6 @@ export default function SignoutPage() {
         // Check cookies
         if(cookies.signout_redirect_to) {
           setRedirect(cookies.signout_redirect_to)
-          // Sign Out and handle redirect
-          const resp = await signOut({redirect: false})
-          if(resp.url) {
-            window.location.href = redirect
-          }
         }
       }
       // Sign Out and handle redirect

@@ -1,7 +1,7 @@
 import {MwaUser} from '@/utils/app/types'
 import {getMfaCredentials,updateMfaCurrentChallenge,createMfaCredential} from './db/utils'
 import {MfaCredential} from './types'
-import {RP_ID,RP_NAME,RP_ORIGIN} from './constants'
+import {RP_ID,RP_NAME,RP_ORIGIN,MAX_MFA_PER_USER} from './constants'
 import {generateRegistrationOptions,verifyRegistrationResponse} from '@simplewebauthn/server'
 import {CredentialDeviceType, RegistrationResponseJSON} from '@simplewebauthn/types'
 
@@ -10,6 +10,8 @@ import {CredentialDeviceType, RegistrationResponseJSON} from '@simplewebauthn/ty
 export async function getRegistrationOptions(user: MwaUser){
   // Get current credentials
   const userAuthenticators: MfaCredential[] = await getMfaCredentials(user.address)
+  // Prevent voiding Max Registrations Per User
+  if((userAuthenticators.length+1) > MAX_MFA_PER_USER) return false
   // Generate options
   const options = await generateRegistrationOptions({
     rpName: RP_NAME,
