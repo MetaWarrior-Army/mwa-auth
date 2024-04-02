@@ -10,6 +10,7 @@ export type MwaUser = {
   invite_code?: string,
   num_referrals?: number,
   current_mfa_challenge?: string,
+  current_mfa_session?: string,
 }
 
 export type AppSessionToken = {

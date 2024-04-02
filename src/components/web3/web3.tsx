@@ -7,6 +7,8 @@ import { useAccount,
 import { useState, useEffect } from 'react'
 import Blockies from 'react-blockies'
 
+
+// Profile Banner
 export function ProfileBanner() {
   const { isConnected, address } = useAccount()
   const { data: ensName } = useEnsName({ address })
@@ -27,13 +29,22 @@ export function ProfileBanner() {
   )
 }
 
-export function ConnectWalletModal({showDisconnect}:{
-  showDisconnect: boolean
+
+// Connect Wallet Modal
+export function ConnectWalletModal({showDisconnect,getMFASession}:{
+  showDisconnect: boolean,
+  getMFASession?: boolean,
 }) {
   const { address, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
   const { connectors, connect } = useConnect()
-
+  // Is the wallet connected?
+  if(isConnected) {
+    console.log('Wallet connected: '+address)
+  }
+  else{
+    console.log('Wallet disconnected')
+  }
   // Wallet Option Component for connecting wallet
   function WalletOption({
     connector,

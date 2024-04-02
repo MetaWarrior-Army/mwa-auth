@@ -12,6 +12,7 @@ export async function GET(req: NextRequest) {
   const token = await getToken({req}) as AppSessionToken
   let userid: string
   if(!token) {
+    // Client's that don't have a session can send us an address to start an authentication flow
     const address = req.nextUrl.searchParams.get('address')
     if(!address) return NextResponse.json({error:'Invalid parameters',status:500})
     userid = address

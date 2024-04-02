@@ -1,26 +1,35 @@
 'use-client'
-import { mfaClientGetAuthOptions} from '@/utils/mfa/client'
 import { ConnectWalletModal } from '@/components/web3/web3'
 import { useAccount, useSignMessage } from 'wagmi'
 import { SiweMessage } from 'siwe'
-import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import Cookies from 'js-cookie'
-import { startAuthentication } from '@simplewebauthn/browser'
+import { signIn } from 'next-auth/react'
 
 
-export function SIWEVerifyModal({redirect}:{
-  redirect: string
+// This is the login function. 
+// This is where we control the user flow
+// First thing we need to know is where the user
+// is going next.
+
+// The first thing we check is whether or not we 
+// can get an MFA Session from the server.
+// If so, we know we're sending the user there afterwards
+
+// Otherwise we either send the user to /consent for oauth clients
+// or to a previously provided redirect
+
+export function SIWEVerifyModal({client, redirect, login_challenge}:{
+  client: string,
+  redirect: string,
+  login_challenge?: string
 }) {
   const { address } = useAccount()
   const { isConnected } = useAccount()
   const { signMessageAsync } = useSignMessage()
   const router = useRouter();
-  const cookies = Cookies.get()
 
   // SignIn with Next-Auth and SIWE
   async function loginButton() {
-
     // Generate message
     const message = new SiweMessage({
       domain: window.location.host,
@@ -45,7 +54,50 @@ export function SIWEVerifyModal({redirect}:{
     if(!verifyRes) return false
     // Redirect user
     if(verifyRes.verified){
-      router.push(redirect)
+      // Redirect to MFA
+      if(verifyRes.mfa_session){
+        const mfaRedirect = 'https://auth.metawarrior.army/mfa/verify?address='+encodeURIComponent(address as string)+'&mfasession='+encodeURIComponent(verifyRes.mfa_session)
+        window.location.href=mfaRedirect
+      }
+      
+      // For now do nothing if the user doesn't have MFA
+      console.log('Redirecting to ')
+      console.log(redirect)
+      // Do nothing for now
+      console.log('Success!')
+
+      // User doesn't have MFA, we need to signIn()
+      const signInResult = await signIn("MWA", {
+        message: JSON.stringify(message),
+        redirect: false,
+        signature,
+        type: 'siwe',
+        address: address,
+      })
+      if(!signInResult) return false
+      // If signin successful, accept login and redirect    
+      if(signInResult.ok){
+        console.log('signIn() successful')
+        console.log(signInResult)
+
+        // Kick regular users back to redirect
+        if(client !== 'oauth') window.location.href=redirect
+
+        // OAuth client's need to ping a secure endpoint which returns a redirect_to
+        // Session established, ping secure API endpoint      
+        const acceptLoginReq = await fetch('/api/oauth/acceptLogin',{
+          method: 'POST',
+          headers: {'Content-type':'application/json'},
+          body: JSON.stringify({login_challenge: login_challenge, address: address})
+        })
+        const acceptLoginRes = await acceptLoginReq.json()
+        if(!acceptLoginRes) throw Error('Failed to get result from /api/acceptLogin')
+        if(acceptLoginRes.error) throw Error(acceptLoginRes.error)
+        router.push(acceptLoginRes.redirect_to)
+      }
+      else{
+        console.log('Failed to signIn()')
+      }
     }
 
     return true;

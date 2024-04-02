@@ -1,6 +1,8 @@
 import dbConn from '@/utils/app/db/conn'
 import { MfaCredential } from '../types'
 import { MFA_DB_TABLE } from '../constants'
+import { getRandomString } from '@/utils/rand'
+import { sha512 } from '@/utils/sha512'
 
 
 // CREATE MFA CREDENTIAL 
@@ -70,6 +72,7 @@ export async function getMfaCredential(address: string, id: string) {
   return credential as MfaCredential
 }
 
+// REVOKE ALL MFA CREDENTIALS FOR ADDRESS
 export async function revokeMfaCredentials(address: string) {
   // DELETE from database
   const deleteQuery = "DELETE FROM "+MFA_DB_TABLE+" WHERE user_address='"+address+"'"
@@ -95,4 +98,17 @@ export async function updateMfaCredentialCounter(credentialID: Uint8Array, newCo
   const updateRes = await dbConn.query(updateQuery)
   if(updateRes.rowCount == 0) return undefined
   return true
+}
+
+
+// UPDATE MFA SESSION
+export async function updateMfaSession(address: string) {
+  const newSession = getRandomString(32)
+  const updateQuery = "UPDATE users SET current_mfa_session='"+newSession+"' WHERE address='"+address+"'"
+  const updateRes = await dbConn.query(updateQuery)
+  if(updateRes.rowCount == 0) return undefined
+  // Return hashed value for protection
+  const sessionHashed = await sha512(newSession)
+  console.log('Generated Session: ',sessionHashed)
+  return sessionHashed
 }

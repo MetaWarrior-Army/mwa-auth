@@ -14,9 +14,9 @@ export default function SIWEPage() {
 
   useEffect(() => {
     if(redirect == ''){
-      if(cookies.verify_redirect_to){
-        setRedirect(cookies.verify_redirect_to)
-        console.log('Set redirect to: '+cookies.verify_redirect_to)
+      if(cookies.auth_redirect){
+        setRedirect(cookies.auth_redirect)
+        console.log('Set redirect to: '+cookies.auth_redirect)
       }
     }
   },[redirect,cookies])
@@ -27,7 +27,11 @@ export default function SIWEPage() {
       <ProfileBanner />
       <p>Verify your Passkey or Security Key.</p>
 
-      <SIWEVerifyModal redirect={'/mfa/verify'} />
+      {cookies ?
+        <SIWEVerifyModal redirect={cookies.auth_redirect} client={cookies.auth_client} login_challenge={cookies.login_challenge}/>
+        :  <></>
+      }
+      
       
       <QuestionsBanner/>
     </Modal>

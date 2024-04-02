@@ -4,7 +4,6 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { SiweMessage } from 'siwe'
 import { NextAuthOptions } from 'next-auth'
 import { verifyCredentialAuthenticationResponse } from '../mfa/verify'
-import { AuthenticationResponseJSON } from '@simplewebauthn/types'
 
 // Private
 const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET as string
@@ -76,7 +75,7 @@ export const MWAProvider = CredentialsProvider({
       }
     }
 
-    // MFA login
+    // MFA login (Simple WebAuthn)
     else if(credentials && credentials.type == 'mfa'){
       console.log('mfa signIn(): ')
       // Get User

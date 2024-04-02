@@ -1,4 +1,3 @@
-import { Page, Header, Frame, Footer } from '@/components/app/layout'
 import {cookies} from 'next/headers'
 
 export default function SIWELayout({

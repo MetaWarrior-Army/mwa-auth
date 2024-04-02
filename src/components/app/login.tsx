@@ -20,6 +20,7 @@ export function LoginModal({client, redirect, authType}:{
   const router = useRouter();
   const cookies = Cookies.get()
 
+
   // SignIn with Next-Auth and SIWE
   async function loginButton() {
 
