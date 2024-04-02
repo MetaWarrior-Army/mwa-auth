@@ -30,28 +30,47 @@ export default async function middleware(req: NextRequest) {
     console.log('middleware: /login')
     // We should receive a login_challenge
     const login_challenge = req.nextUrl.searchParams.get('login_challenge')
-    if(!login_challenge) return NextResponse.json({error:'invalid parameters',status:500})
-    // Validate login_challenge with OAuth
-    const loginRequest = await getOAuth2LoginRequest(login_challenge)
-    if(!loginRequest) return NextResponse.json({error:'Failed to get login request',status:500})
-    if(loginRequest.redirect_to) return NextResponse.redirect(new URL(loginRequest.redirect_to,req.url))
-    // Skip if directed to do so
-    if(loginRequest.skip){
-      console.log('skipping login')
-      // Accept Login Request with OAuth Server
-      const acceptRequest = await acceptOAuth2LoginRequest(loginRequest.challenge,{
-        subject: loginRequest.subject,
-        remember: OAUTH_LOGIN_SKIP,
-        remember_for: OAUTH_LOGIN_REMEMBER,
-      })
-      if(!acceptRequest) return NextResponse.json({error:'Failed to accept login request',status:500})
+    // Or a redirect in url params
+    const auth_redirect = req.nextUrl.searchParams.get('redirect')
+    if(!login_challenge && !auth_redirect) return NextResponse.json({error:'Invalid parameters',status:500})
+    
+    // OAuth Login Challenge
+    if(login_challenge){
+      // Validate login_challenge with OAuth
+      const loginRequest = await getOAuth2LoginRequest(login_challenge)
+      if(!loginRequest) return NextResponse.json({error:'Failed to get login request',status:500})
+      if(loginRequest.redirect_to) return NextResponse.redirect(new URL(loginRequest.redirect_to,req.url))
+      // Skip if directed to do so
+      if(loginRequest.skip){
+        console.log('skipping login')
+        // Accept Login Request with OAuth Server
+        const acceptRequest = await acceptOAuth2LoginRequest(loginRequest.challenge,{
+          subject: loginRequest.subject,
+          remember: OAUTH_LOGIN_SKIP,
+          remember_for: OAUTH_LOGIN_REMEMBER,
+        })
+        if(!acceptRequest) return NextResponse.json({error:'Failed to accept login request',status:500})
 
-      return NextResponse.redirect(new URL(acceptRequest.redirect_to,req.url))
+        return NextResponse.redirect(new URL(acceptRequest.redirect_to,req.url))
+      }
+      // Set cookies for /siwe 'oauth' login
+      const res = NextResponse.next()
+      res.cookies.set('login_challenge',loginRequest.challenge)
+      res.cookies.set('auth_client','oauth')
+      res.cookies.set('auth_redirect',loginRequest.client.client_uri)
+      return res
     }
-    // Present UI for Next-Auth Sign In
-    const res = NextResponse.next()
-    res.cookies.set('login_challenge',loginRequest.challenge)
-    return res
+
+    // This login follows auth_redirect without a login_challenge
+    else{
+      if(!auth_redirect) return NextResponse.json({error:'Invalid parameters, no redirect',status:500})
+      // Only redirect to our domain
+      if(!auth_redirect.startsWith('https://auth.metawarrior.army')) return NextResponse.json({error:'Invalid redirect',status:500})
+      const res = NextResponse.next()
+      res.cookies.set('auth_client','mwa-auth')
+      res.cookies.set('auth_redirect',auth_redirect)
+      return res
+    }
   }
 
 
@@ -164,6 +183,7 @@ export default async function middleware(req: NextRequest) {
     if(verifyMfaSessionRes.validated){
       const resp = NextResponse.next()
       // This is where the client name would be useful
+      // Cookies should already be set for auth_client, login_challenge, and redirect at this point.
       return resp
     }
     return NextResponse.next()
