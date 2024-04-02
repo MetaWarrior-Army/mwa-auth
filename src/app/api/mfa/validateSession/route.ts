@@ -9,7 +9,7 @@ const PRIVATE_API_KEY = process.env.PRIVATE_API_KEY as string
 // PRIVATE API ENDPOINT
 // Only accept POST
 export async function POST(req: NextRequest) {
-  console.log('validateSession: ')
+  console.log('/api/mfa/validateSession: POST')
   // Get parameters
   const { secret, address, session } = await req.json()
   // Validate secret
@@ -22,10 +22,10 @@ export async function POST(req: NextRequest) {
   const mfaSessionHash = await sha512(user.current_mfa_session as string)
   if(session == mfaSessionHash) {
     // Return results
-    console.log('Session matches')
+    console.log('/api/mfa/validateSession: mfa_session match')
     return NextResponse.json({verified: true, status:200})
   }
   // Return results
-  console.log('Session doesn\'t match')
+  console.log('/api/mfa/validateSession: mfa_session doesn\'t match')
   return NextResponse.json({verified: false})
 }

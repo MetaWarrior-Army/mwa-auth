@@ -72,6 +72,7 @@ export async function getMfaCredential(address: string, id: string) {
   return credential as MfaCredential
 }
 
+
 // REVOKE ALL MFA CREDENTIALS FOR ADDRESS
 export async function revokeMfaCredentials(address: string) {
   // DELETE from database
@@ -80,6 +81,7 @@ export async function revokeMfaCredentials(address: string) {
   if(deleteRes.rowCount == 0) return undefined
   return true
 }
+
 
 // UPDATE MFA CURRENT CHALLENGE
 export async function updateMfaCurrentChallenge(address: string, challenge: string) {
@@ -109,6 +111,14 @@ export async function updateMfaSession(address: string) {
   if(updateRes.rowCount == 0) return undefined
   // Return hashed value for protection
   const sessionHashed = await sha512(newSession)
-  console.log('Generated Session: ',sessionHashed)
   return sessionHashed
+}
+
+
+// CLEAR MFA SESSION
+export async function clearMfaSession(address: string) {
+  const updateQuery = "UPDATE users SET current_mfa_session=NULL WHERE address='"+address+"'"
+  const updateRes = await dbConn.query(updateQuery)
+  if(updateRes.rowCount == 0 ) return undefined
+  return true
 }

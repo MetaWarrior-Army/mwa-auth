@@ -7,7 +7,7 @@ import { getToken } from "next-auth/jwt"
 
 // Only accept POST
 export async function POST(req: NextRequest, res: NextResponse) {
-  console.log('acceptConsent: ')
+  console.log('/api/oauth/acceptConsent: POST')
   // Get Secure Server Session (Next-Auth)
   const token = await getToken({ req }) as AppSessionToken
   if(!token) return NextResponse.json({error:'No session token',status:500})

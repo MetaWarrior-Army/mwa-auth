@@ -28,7 +28,7 @@ export function SignOutModal({redirect}:{
     <div id="signout" className="flex p-2">
       <button 
         className="bg-slate-950 p-2 w-full text-slate-500 rounded-lg shadow-xl border-solid border-2 hover:border-dotted border-slate-500"
-        onClick={() => {window.location.href='/signout?redirect_to='+redirect}}>Sign Out</button>
+        onClick={() => {window.location.href='/signout?redirect='+redirect}}>Sign Out</button>
     </div>
   )
 }

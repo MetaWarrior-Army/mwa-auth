@@ -1,3 +1,5 @@
+// Used for generating unique MFA Sessions.
+// Stored in DB as plain text, returned as sha512()
 export function getRandomString(length: number) {
   let result = '';
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

@@ -4,12 +4,14 @@ import { getOAuth2LoginRequest,
   acceptOAuth2ConsentRequest,
   getOAuth2LogoutRequest,
   acceptOAuth2LogoutRequest,
-  genOAuthClientToken
+  genOAuthClientToken,
+  rejectOAuth2ConsentRequest
 } from '@/utils/hydra/admin'
 import {OAUTH_CONSENT_REMEMBER,
   OAUTH_CONSENT_SKIP,
   OAUTH_LOGIN_REMEMBER,
-  OAUTH_LOGIN_SKIP
+  OAUTH_LOGIN_SKIP,
+  PROTECTED_OAUTH_CLIENTS
 } from '@/utils/hydra/constants'
 import { sha512 } from '@/utils/sha512'
 import { AppSessionToken } from '@/utils/app/types'
@@ -42,7 +44,7 @@ export default async function middleware(req: NextRequest) {
       if(loginRequest.redirect_to) return NextResponse.redirect(new URL(loginRequest.redirect_to,req.url))
       // Skip if directed to do so
       if(loginRequest.skip){
-        console.log('skipping login')
+        console.log('middleware: /login: skipping login')
         // Accept Login Request with OAuth Server
         const acceptRequest = await acceptOAuth2LoginRequest(loginRequest.challenge,{
           subject: loginRequest.subject,
@@ -93,9 +95,19 @@ export default async function middleware(req: NextRequest) {
     })
     const mwaUser = await getUserReq.json()
     if(!mwaUser) return NextResponse.json({error:'Failed to interact with /api/getMwaUser',status:500})
+    // Check protected OAuth clients
+    if(!mwaUser.email_active) {
+      if(PROTECTED_OAUTH_CLIENTS.includes(consentRequest.client.client_id)) {
+        console.log('middleware: /consent: Autorejecting user from protected OAuth client')
+        // Reject consent for OAuth clients that require a fully baked user
+        const rejectReq = await rejectOAuth2ConsentRequest(consentRequest.challenge)
+        if(!rejectReq) return NextResponse.json({error:'Failed to rejectOAuth2ConsentRequest',status:500})
+        return NextResponse.redirect(rejectReq.redirect_to)
+      }
+    }
     // Build the response
     const resp = NextResponse.next()
-    resp.cookies.delete('redirect_to')
+    resp.cookies.delete('oauth_consent_redirect')
     resp.cookies.set('oauth_client_name',consentRequest.client.client_name)
     resp.cookies.set('oauth_logo_uri',consentRequest.client.logo_uri)
     resp.cookies.set('consent_challenge',consentRequest.challenge)
@@ -113,7 +125,7 @@ export default async function middleware(req: NextRequest) {
       })
       if(!acceptReq) return NextResponse.json({error:'Failed to accept consent request',status:500})
       // Set cookie for the client-side redirect
-      resp.cookies.set('redirect_to',acceptReq.redirect_to)
+      resp.cookies.set('oauth_consent_redirect',acceptReq.redirect_to)
     }
     return resp
   }
@@ -150,20 +162,6 @@ export default async function middleware(req: NextRequest) {
   }
 
 
-  // Middleware for /mfa/verify/verified
-  else if (req.nextUrl.pathname.startsWith('/mfa\/verify\/verified')) {
-    console.log('middleware: /mfa/verify/verified')
-    // Check for active session
-    const sessionToken = await getToken({req}) as AppSessionToken
-    if(!sessionToken){
-      // Send user to /mfa/verify with redirect
-      const resp = NextResponse.redirect(new URL('/mfa/verify',req.url))
-      resp.cookies.set('verify_redirect_to','https://'+APP_DOMAIN+'/mfa/verify/verified')
-      return resp
-    }
-    return NextResponse.next()
-  }
-
   // Middleware for /mfa/verify
   else if (req.nextUrl.pathname.startsWith('/mfa\/verify')){
     console.log('middleware: /mfa/verify')
@@ -195,70 +193,23 @@ export default async function middleware(req: NextRequest) {
     // Check for active session
     const sessionToken = await getToken({req}) as AppSessionToken
     if(!sessionToken){
-      // Send user to /signin with redirect
-      const resp = NextResponse.redirect(new URL('/signin',req.url))
+      // Send user to /login with redirect
+      const resp = NextResponse.redirect(new URL('/login?redirect=https://auth.metawarrior.army/mfa',req.url))
       // Come back after authenticating
-      resp.cookies.set('signin_redirect_to','https://'+APP_DOMAIN+'/mfa')
+      resp.cookies.set('auth_redirect','https://'+APP_DOMAIN+'/mfa')
       return resp
     }
     return NextResponse.next()
   }
 
-  // Middleware for /siwe
-  else if (req.nextUrl.pathname.startsWith('/siwe')) {
-    console.log('middleware: /siwe')
-    // We should receive a login_challenge
-    const login_challenge = req.nextUrl.searchParams.get('login_challenge')
-    // Or a redirect in url params
-    const auth_redirect = req.nextUrl.searchParams.get('redirect')
-    if(!login_challenge && !auth_redirect) return NextResponse.json({error:'Invalid parameters',status:500})
-    
-    // OAuth Login Challenge
-    if(login_challenge){
-      // Validate login_challenge with OAuth
-      const loginRequest = await getOAuth2LoginRequest(login_challenge)
-      if(!loginRequest) return NextResponse.json({error:'Failed to get login request',status:500})
-      if(loginRequest.redirect_to) return NextResponse.redirect(new URL(loginRequest.redirect_to,req.url))
-      // Skip if directed to do so
-      if(loginRequest.skip){
-        console.log('skipping login')
-        // Accept Login Request with OAuth Server
-        const acceptRequest = await acceptOAuth2LoginRequest(loginRequest.challenge,{
-          subject: loginRequest.subject,
-          remember: OAUTH_LOGIN_SKIP,
-          remember_for: OAUTH_LOGIN_REMEMBER,
-        })
-        if(!acceptRequest) return NextResponse.json({error:'Failed to accept login request',status:500})
-
-        return NextResponse.redirect(new URL(acceptRequest.redirect_to,req.url))
-      }
-      // Set cookies for /siwe 'oauth' login
-      const res = NextResponse.next()
-      res.cookies.set('login_challenge',loginRequest.challenge)
-      res.cookies.set('auth_client','oauth')
-      res.cookies.set('auth_redirect',loginRequest.client.client_uri)
-      return res
-    }
-
-    // This login follows auth_redirect without a login_challenge
-    else{
-      if(!auth_redirect) return NextResponse.json({error:'Invalid parameters, no redirect',status:500})
-      // Only redirect to our domain
-      if(!auth_redirect.startsWith('https://auth.metawarrior.army')) return NextResponse.json({error:'Invalid redirect',status:500})
-      const res = NextResponse.next()
-      res.cookies.set('auth_client','mwa-auth')
-      res.cookies.set('auth_redirect',auth_redirect)
-      return res
-    }
-  }
-
+ 
   // Middleware for /signout
   else if(req.nextUrl.pathname.startsWith('/signout')) {
     console.log('middleware: /signout')
     // We need to get a redirect_to from the query parameters
-    const redirect_to = req.nextUrl.searchParams.get('redirect_to')
+    const redirect = req.nextUrl.searchParams.get('redirect')
     const resp = NextResponse.next()
-    resp.cookies.set('signout_redirect_to',redirect_to as string)
+    resp.cookies.set('auth_redirect',redirect as string)
     return resp
   }
 }

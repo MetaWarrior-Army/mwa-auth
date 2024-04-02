@@ -1,11 +1,9 @@
 'use-client'
 import { mfaClientGetAuthOptions} from '@/utils/mfa/client'
 import { ConnectWalletModal } from '@/components/web3/web3'
-import { useAccount, useSignMessage } from 'wagmi'
-import { SiweMessage } from 'siwe'
+import { useAccount } from 'wagmi'
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import Cookies from 'js-cookie'
 import { startAuthentication } from '@simplewebauthn/browser'
 
 
@@ -16,9 +14,7 @@ export function VerifyMfaModal({client, redirect, login_challenge}:{
 }) {
   const { address } = useAccount()
   const { isConnected } = useAccount()
-  const { signMessageAsync } = useSignMessage()
   const router = useRouter();
-  const cookies = Cookies.get()
 
 
   // SignIn with Next-Auth and SIWE
@@ -55,7 +51,6 @@ export function VerifyMfaModal({client, redirect, login_challenge}:{
       router.push(acceptLoginRes.redirect_to)
 
     }
-    console.log(signInResult)
     return true;
   }
 

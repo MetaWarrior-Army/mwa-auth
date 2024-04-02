@@ -10,7 +10,7 @@ export default function ConsentLayout({
   const cookieStore =cookies()
 
   // redirecting from client-side. Don't include Header and Footer
-  if(cookieStore.has('redirect_to')){
+  if(cookieStore.has('oauth_consent_redirect')){
     return (
       <Page>
         <Frame>

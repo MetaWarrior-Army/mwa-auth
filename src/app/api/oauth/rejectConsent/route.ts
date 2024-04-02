@@ -5,7 +5,7 @@ import { AppSessionToken } from '@/utils/app/types';
 
 // Only accept POST
 export async function POST(req: NextRequest, res: NextResponse) {
-  console.log('rejectConsent: ')
+  console.log('/api/oauth/rejectConsent: POST')
   // Get Secure Server Session (Next-Auth)
   const token = await getToken({ req }) as AppSessionToken
   if(!token) return NextResponse.json({error:'No session token',status:500})

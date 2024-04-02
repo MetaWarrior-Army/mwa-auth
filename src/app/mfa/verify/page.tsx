@@ -31,8 +31,7 @@ export default function VerifyMfaPage() {
         <VerifyMfaModal client={cookies.auth_client} redirect={redirect} login_challenge={cookies.login_challenge}/>
         : <></>
       }
-      
-      
+          
       <QuestionsBanner/>
     </Modal>
     </Web3Providers>

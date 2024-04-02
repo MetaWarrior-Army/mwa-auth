@@ -14,8 +14,8 @@ export default function SignoutPage() {
       // No redirect set
       if(redirect == ''){
         // Check cookies
-        if(cookies.signout_redirect_to) {
-          setRedirect(cookies.signout_redirect_to)
+        if(cookies.auth_redirect) {
+          setRedirect(cookies.auth_redirect)
         }
       }
       // Sign Out and handle redirect

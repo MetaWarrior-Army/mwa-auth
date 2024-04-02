@@ -7,7 +7,7 @@ import { getToken } from 'next-auth/jwt'
 
 // GET Authentication Options
 export async function GET(req: NextRequest) {
-  console.log('/api/mfa/verify: GET: ')
+  console.log('/api/mfa/verify: GET')
   // Get Session
   const token = await getToken({req}) as AppSessionToken
   let userid: string
@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
 
 // POST Authentication Response
 export async function POST(req: NextRequest) {
-  console.log('/api/mfa/verify: POST: ')
+  console.log('/api/mfa/verify: POST')
   // Get Session
   const token = await getToken({req}) as AppSessionToken
   if(!token) return NextResponse.json({error:'Invalid Session',status:500})

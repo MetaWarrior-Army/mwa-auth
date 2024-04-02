@@ -19,8 +19,8 @@ export default function ConsentPage() {
       if(redirect){
         window.location.href=redirect
       }
-      else if(cookies.redirect_to) {
-        setRedirect(cookies.redirect_to)
+      else if(cookies.oauth_consent_redirect) {
+        setRedirect(cookies.oauth_consent_redirect)
       }
       else if(cookies){
         setConsentChallenge(cookies.consent_challenge)

@@ -44,7 +44,7 @@ export function SIWEVerifyModal({client, redirect, login_challenge}:{
       account: address,
       message: message.prepareMessage(),
     })
-    // Verify message
+    // Verify message - Supports MFA Session Creation
     const verifyReq = await fetch('/api/siwe/verify', {
       method: 'POST',
       headers: {'Content-type':'application/json'},
@@ -54,18 +54,11 @@ export function SIWEVerifyModal({client, redirect, login_challenge}:{
     if(!verifyRes) return false
     // Redirect user
     if(verifyRes.verified){
-      // Redirect to MFA
+      // Redirect to MFA - signIn() happens on mfa page
       if(verifyRes.mfa_session){
         const mfaRedirect = 'https://auth.metawarrior.army/mfa/verify?address='+encodeURIComponent(address as string)+'&mfasession='+encodeURIComponent(verifyRes.mfa_session)
-        window.location.href=mfaRedirect
+        router.push(mfaRedirect)
       }
-      
-      // For now do nothing if the user doesn't have MFA
-      console.log('Redirecting to ')
-      console.log(redirect)
-      // Do nothing for now
-      console.log('Success!')
-
       // User doesn't have MFA, we need to signIn()
       const signInResult = await signIn("MWA", {
         message: JSON.stringify(message),
@@ -77,26 +70,24 @@ export function SIWEVerifyModal({client, redirect, login_challenge}:{
       if(!signInResult) return false
       // If signin successful, accept login and redirect    
       if(signInResult.ok){
-        console.log('signIn() successful')
-        console.log(signInResult)
-
         // Kick regular users back to redirect
         if(client !== 'oauth') window.location.href=redirect
-
-        // OAuth client's need to ping a secure endpoint which returns a redirect_to
-        // Session established, ping secure API endpoint      
-        const acceptLoginReq = await fetch('/api/oauth/acceptLogin',{
-          method: 'POST',
-          headers: {'Content-type':'application/json'},
-          body: JSON.stringify({login_challenge: login_challenge, address: address})
-        })
-        const acceptLoginRes = await acceptLoginReq.json()
-        if(!acceptLoginRes) throw Error('Failed to get result from /api/acceptLogin')
-        if(acceptLoginRes.error) throw Error(acceptLoginRes.error)
-        router.push(acceptLoginRes.redirect_to)
+        // acceptOAuth2LoginRequest
+        if(client == 'oauth') {
+          const acceptLoginReq = await fetch('/api/oauth/acceptLogin',{
+            method: 'POST',
+            headers: {'Content-type':'application/json'},
+            body: JSON.stringify({login_challenge: login_challenge, address: address})
+          })
+          const acceptLoginRes = await acceptLoginReq.json()
+          if(!acceptLoginRes) throw Error('Failed to get result from /api/acceptLogin')
+          if(acceptLoginRes.error) throw Error(acceptLoginRes.error)
+          // Redirect user
+          router.push(acceptLoginRes.redirect_to)
+        }  
       }
       else{
-        console.log('Failed to signIn()')
+        console.log('/components/siwe/verify: Failed to signIn()')
       }
     }
 

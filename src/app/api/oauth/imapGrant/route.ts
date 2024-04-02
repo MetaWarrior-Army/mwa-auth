@@ -13,7 +13,7 @@ import {APP_DOMAIN} from '@/utils/app/constants'
 
 // Only support GET, dovecot should never POST
 export async function GET(req: NextRequest, res: NextResponse) {
-    console.log('imapGrant: ')
+    console.log('/api/oauth/imapGrant: GET')
     // Get access_token from request
     const access_token = req.nextUrl.searchParams.get('access_token')
     if(!access_token) return NextResponse.json({error:'Invalid parameters',status:500})

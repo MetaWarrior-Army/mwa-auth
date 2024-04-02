@@ -7,7 +7,7 @@ import { getToken } from 'next-auth/jwt'
 
 // GET registration options
 export async function GET(req: NextRequest) {
-  console.log('/api/mfa/register: ')
+  console.log('/api/mfa/register: GET ')
   // Get Session
   const token = await getToken({req}) as AppSessionToken
   if(!token) return NextResponse.json({error:'Invalid Session',status:500})
@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
 
 // POST Registration Response
 export async function POST(req: NextRequest) {
-  console.log('/api/mfa/register: ')
+  console.log('/api/mfa/register: POST ')
   // Get Session
   const token = await getToken({req}) as AppSessionToken
   if(!token) return NextResponse.json({error:'Invalid Session',status:500})

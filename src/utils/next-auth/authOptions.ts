@@ -4,6 +4,8 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { SiweMessage } from 'siwe'
 import { NextAuthOptions } from 'next-auth'
 import { verifyCredentialAuthenticationResponse } from '../mfa/verify'
+import { getMfaCredentials } from '../mfa/db/utils'
+import { MfaCredential } from '../mfa/types'
 
 // Private
 const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET as string
@@ -39,6 +41,7 @@ export const MWAProvider = CredentialsProvider({
 
     // SIWE login
     if(credentials && credentials.type == 'siwe'){
+      console.log('next-auth authrorize() credential.type: siwe: ')
       try {
         // Get SIWE Message
         const siwe = new SiweMessage(JSON.parse(credentials?.message || "{}"))
@@ -50,6 +53,7 @@ export const MWAProvider = CredentialsProvider({
         })
         // Authentication successful, check for existing user or create one if needed
         if (result.success) {
+          // Get User
           let user: MwaUser
           const userCheck = await getMwaUser(siwe.address)
           // Create new user
@@ -60,6 +64,10 @@ export const MWAProvider = CredentialsProvider({
           }
           else{
             user = userCheck
+            // Make sure user doesn't have any MFA keys, if so, they should be forced
+            // to authenticate via 'mfa'
+            const mfaCreds: MfaCredential[] = await getMfaCredentials(siwe.address)
+            if(mfaCreds.length > 0) return null
           }
           // return SessionToken
           return {
@@ -76,8 +84,10 @@ export const MWAProvider = CredentialsProvider({
     }
 
     // MFA login (Simple WebAuthn)
+    // We only allow previously created users the opportunity to
+    // register WebAuthn keys in our database
     else if(credentials && credentials.type == 'mfa'){
-      console.log('mfa signIn(): ')
+      console.log('next-auth authrorize() credential.type: mfa: ')
       // Get User
       const user = await getMwaUser(credentials.address)
       if(!user) return null
@@ -87,14 +97,13 @@ export const MWAProvider = CredentialsProvider({
       const verified = await verifyCredentialAuthenticationResponse(user,body)
       if(!verified) return null
       // Return user
-      console.log('returing mfa user')
       return {
         id: user.address,
         user: user,
       }
     }
 
-    console.log('Invalid credentials')
+    console.log('next-auth authorize(): Invalid credentials')
     return null
   },
 })
