@@ -17,7 +17,6 @@ export default function LoginPage() {
     if(redirect == ''){
       if(cookies.auth_redirect){
         setRedirect(cookies.auth_redirect)
-        console.log('Set redirect to: '+cookies.auth_redirect)
       }
     }
   },[redirect,cookies])

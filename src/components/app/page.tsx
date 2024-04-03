@@ -1,4 +1,5 @@
 import { ReactNode } from "react"
+import { APP_DOMAIN } from '@/utils/app/constants'
 
 export function InfoBanner({signOutRedirect}: {
   signOutRedirect?:string,
@@ -8,7 +9,7 @@ export function InfoBanner({signOutRedirect}: {
       <p className="text-slate-200">Questions?</p>
       <p><a href="https://www.metawarrior.army" className="text-yellow-500 hover:text-yellow-700">Answers &rarr;</a></p>
       {signOutRedirect ? 
-        <p><a href={'https://auth.metawarrior.army/signout?redirect='+signOutRedirect} className="text-slate-500 hover:text-slate-700">Signout &rarr;</a></p>
+        <p><a href={'https://'+APP_DOMAIN+'/signout?redirect='+signOutRedirect} className="text-slate-500 hover:text-slate-700">Signout &rarr;</a></p>
         :<></>
       }      
     </div>

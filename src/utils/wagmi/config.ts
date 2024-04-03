@@ -1,18 +1,15 @@
 import { http, createConfig } from 'wagmi'
 import { mainnet } from 'wagmi/chains'
 import { injected, walletConnect, coinbaseWallet } from 'wagmi/connectors'
-import {PROJECT_NAME,WC_PROJECT_ID} from '@/utils/app/constants'
-// Public
-const projectId = WC_PROJECT_ID
-const projectName = PROJECT_NAME
+import {PROJECT_NAME, WC_PROJECT_ID} from '@/utils/app/constants'
 
 // This is redefined in web3Providers fix this
 export const wagmiConfig = createConfig({
   chains: [mainnet ],
   connectors: [
-    walletConnect({ projectId }),
+    walletConnect({ projectId: WC_PROJECT_ID }),
     coinbaseWallet({
-        appName: projectName,
+        appName: PROJECT_NAME,
       }),
     injected(),
   ],

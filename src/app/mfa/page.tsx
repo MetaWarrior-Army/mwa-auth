@@ -7,11 +7,10 @@ import {VerifyMFAModal} from '@/components/mfa/verify'
 import {RegisterMFAModal} from '@/components/mfa/register'
 import {MAX_MFA_PER_USER} from '@/utils/mfa/constants'
 import {ShowKeyCount, RevokeAllKeysModal} from '@/components/mfa/page'
+import { APP_DOMAIN } from '@/utils/app/constants'
 import {useState,useEffect} from 'react'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-// Public
-const APP_DOMAIN = 'auth.metawarrior.army'
 
 // Login
 export default function MfaPage() {

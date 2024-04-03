@@ -1,12 +1,10 @@
-'use-client'
 import { mfaClientGetAuthOptions} from '@/utils/mfa/client'
 import { ConnectWalletModal } from '@/components/web3/web3'
 import { useAccount } from 'wagmi'
-import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { startAuthentication } from '@simplewebauthn/browser'
-import { useEffect, useState } from 'react'
 import { toasterNotify } from '@/utils/toast/toaster'
+import { mwaSignIn } from '@/utils/next-auth/signin'
 
 
 export function MfaLoginModal({client, redirect, login_challenge}:{
@@ -17,8 +15,6 @@ export function MfaLoginModal({client, redirect, login_challenge}:{
   const { address } = useAccount()
   const { isConnected } = useAccount()
   const router = useRouter();
-  const [isVerified,setIsVerified] = useState(false)
-
 
   // SignIn with Next-Auth and SIWE
   async function verifyMFA() {  
@@ -31,39 +27,23 @@ export function MfaLoginModal({client, redirect, login_challenge}:{
     } catch (e) {
       toasterNotify({message:'Failed to verify security key',type:'error'})
     }
-    
-    // Validate authentication response
-    console.log('Verification response')
-    console.log(verifyResponse)
-    const signInResult = await signIn("MWA",{
-      message: JSON.stringify(verifyResponse),
-      signature: '0x0',
-      redirect: false,
-      type: 'mfa',
-      address: address,
-    })
-    if(!signInResult) return false
-    // User is signed in
-    if(signInResult?.ok){
-      toasterNotify({message:'Verified',type:'success'})
-      // Redirect non OAuth users
-      if(client!=='oauth') window.location.href=redirect
-      if(!login_challenge) throw Error('No login_challenge')
-      // OAuth client's need to ping a secure endpoint which returns a redirect_to
-      // Session established, ping secure API endpoint      
-      const acceptLoginReq = await fetch('/api/oauth/acceptLogin',{
-        method: 'POST',
-        headers: {'Content-type':'application/json'},
-        body: JSON.stringify({login_challenge: login_challenge, address: address})
+    // Got response
+    if(verifyResponse){
+      const signInResult = await mwaSignIn({
+        message: verifyResponse,
+        signature: '0x0',
+        type: 'mfa',
+        address: address as string,
+        login_challenge: login_challenge as string,
+        mfasession: '',
+        auth_client: client,
+        auth_redirect: redirect,
       })
-      const acceptLoginRes = await acceptLoginReq.json()
-      if(!acceptLoginRes) throw Error('Failed to get result from /api/acceptLogin')
-      if(acceptLoginRes.error) throw Error(acceptLoginRes.error)
-      // Redirect OAuth User
-      router.push(acceptLoginRes.redirect_to)
-      setIsVerified(true)
+      if(!signInResult) return false
+      // SignIn successful, redirect
+      router.push(signInResult)
     }
-    return false;
+    return true;
   }
 
   return (

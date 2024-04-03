@@ -1,5 +1,6 @@
 import {NextRequest,NextResponse} from 'next/server'
 import {sha512} from '@/utils/sha512'
+import { APP_BASE_URL } from '@/utils/app/constants'
 // Private
 const PRIVATE_API_KEY = process.env.PRIVATE_API_KEY as string
 
@@ -15,7 +16,7 @@ export async function mfaVerifyMiddleware(req: NextRequest) {
   if(!mfaSession || !address) return NextResponse.json({error:'Invalid parameters',status:500})
   // Validate session - ping API
   const SECRET_HASH = await sha512(PRIVATE_API_KEY)
-  const verifyMfaSessionReq = await fetch('https://auth.metawarrior.army/api/mfa/validateSession',{
+  const verifyMfaSessionReq = await fetch(APP_BASE_URL+'/api/mfa/validateSession',{
     method: 'POST',
     headers: {'Content-type':'application/json'},
     body: JSON.stringify({secret: SECRET_HASH, address: address, session: mfaSession})
