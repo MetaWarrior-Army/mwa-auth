@@ -5,7 +5,12 @@ export function ShowKeyCount({keycount}: {
 }) {
   return(
     <>
-      <p>You have {keycount} registered security keys.</p>
+      {(keycount == 1) ?
+        <p className="text-lg">You have <span className="text-yellow-500 font-bold">{keycount}</span> registered security key.</p>
+        :
+        <p className="text-lg">You have <span className="text-yellow-500 font-bold">{keycount}</span> registered security keys.</p>
+      }
+      
     </>
   )
 }
@@ -14,7 +19,6 @@ export function RevokeAllKeysModal({onRevoke}: {onRevoke: any}){
   async function revokeKeys(){
     const revokeReq = await fetch('/api/mfa/revokeKeys')
     const revokeRes = await revokeReq.json()
-    console.log(revokeRes)
     if(revokeRes.revoked){
       toasterNotify({message:'All Keys Revoked!',type:'success'})
       onRevoke()

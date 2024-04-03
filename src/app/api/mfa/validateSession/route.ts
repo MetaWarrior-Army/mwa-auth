@@ -2,9 +2,8 @@ import { sha512 } from '@/utils/sha512';
 import { getMwaUser } from '@/utils/app/db/utils';
 import { NextRequest, NextResponse } from "next/server";
 import { MwaUser } from '@/utils/app/types';
+import { PRIVATE_API_KEY } from '@/utils/app/constants'
 
-// Private
-const PRIVATE_API_KEY = process.env.PRIVATE_API_KEY as string
 
 // PRIVATE API ENDPOINT
 // Only accept POST

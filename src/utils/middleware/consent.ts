@@ -9,8 +9,7 @@ import {APP_DOMAIN} from '@/utils/app/constants'
 import {PROTECTED_OAUTH_CLIENTS,
   OAUTH_CONSENT_SKIP,
   OAUTH_CONSENT_REMEMBER} from '@/utils/hydra/constants'
-// Private
-const PRIVATE_API_KEY = process.env.PRIVATE_API_KEY as string
+import { PRIVATE_API_KEY } from '@/utils/app/constants'
 
 export async function consentMiddleware(req: NextRequest) {
   console.log('middleware: /consent')

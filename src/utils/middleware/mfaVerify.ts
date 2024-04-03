@@ -1,8 +1,6 @@
 import {NextRequest,NextResponse} from 'next/server'
 import {sha512} from '@/utils/sha512'
-import { APP_BASE_URL } from '@/utils/app/constants'
-// Private
-const PRIVATE_API_KEY = process.env.PRIVATE_API_KEY as string
+import { PRIVATE_API_KEY, APP_BASE_URL } from '@/utils/app/constants'
 
 export async function mfaVerifyMiddleware(req: NextRequest) {
   console.log('middleware: /mfa/verify')

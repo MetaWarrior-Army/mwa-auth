@@ -52,7 +52,7 @@ export default function MfaPage() {
       <FrameHeader title="Multi-Factor Authentication"/>
       <Modal>
           <div className="space-y-6 py-8 text-base leading-7 dark:text-slate-400">
-            <p>Here you can register and verify up to 3 Passkeys or Security Keys.</p>
+            <p>Register and verify up to 3 Passkeys or Security Keys.</p>
             {(keyCount+1) > MAX_MFA_PER_USER ? <></> :
               <>
               <RegisterMFAModal onRegister={()=>incrementKeyCount()}/>

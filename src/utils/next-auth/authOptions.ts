@@ -6,10 +6,8 @@ import { NextAuthOptions } from 'next-auth'
 import { verifyCredentialAuthenticationResponse } from '../mfa/verify'
 import { getMfaCredentials } from '../mfa/db/utils'
 import { MfaCredential } from '../mfa/types'
+import { NEXTAUTH_SECRET, NEXTAUTH_URL } from '@/utils/app/constants'
 
-// Private
-const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET as string
-const NEXTAUTH_URL = process.env.NEXTAUTH_URL as string
 
 export const MWAProvider = CredentialsProvider({
   id: 'MWA',
