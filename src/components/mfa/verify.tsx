@@ -1,5 +1,5 @@
 import { startAuthentication } from '@simplewebauthn/browser'
-import { toast, Slide } from 'react-toastify'
+import { toasterNotify } from '@/utils/toast/toaster'
 
 // Verify MFA Key
 export function VerifyMFAModal() {
@@ -30,46 +30,12 @@ export function VerifyMFAModal() {
       // Validate authentication results
       const authResponse = await verifyAuthentication(verifyResponse)
       if(authResponse.verified){
-        toast.success('Key Verified!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          transition: Slide,
-        })
-      }
-      else{
-        toast.error(authResponse.verified, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          transition: Slide,
-        })
+        toasterNotify({message:'Key Verified!',type:'success'})
       }
     }
     catch(e: any) {
-      toast.error(e.message, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Slide,
-      })
+      toasterNotify({message:e.message,type:'error'})
     }
-    
   }
 
   return (

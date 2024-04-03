@@ -1,15 +1,14 @@
 'use client'
 
-import { QuestionsBanner, Modal } from '@/components/app/page'
-import { ProfileBanner } from '@/components/web3/web3'
-//import { LoginModal } from '@/components/app/login'
+import { FrameHeader, InfoBanner, Modal } from '@/components/app/page'
 import Web3Providers  from '@/app/web3providers'
 import Cookies from 'js-cookie'
 import { useEffect, useState } from 'react'
-import { SIWEVerifyModal } from '@/components/siwe/verify'
+import { SIWELoginModal } from '@/components/siwe/login'
+import { ProfileBanner } from '@/components/web3/web3'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-
-// Login
 export default function LoginPage() {
   const [redirect,setRedirect] = useState('')
   const cookies = Cookies.get()
@@ -23,19 +22,21 @@ export default function LoginPage() {
     }
   },[redirect,cookies])
 
-
   return (
     <Web3Providers>
+      <FrameHeader title="Login to MetaWarrior Army"/>
       <Modal>
-        <ProfileBanner />
-
-        {cookies ?
-          <SIWEVerifyModal redirect={cookies.auth_redirect} client={cookies.auth_client} login_challenge={cookies.login_challenge}/>
-          :  <></>
-        }
-
-        <QuestionsBanner/>
+          {cookies ? 
+            <>
+            <SIWELoginModal redirect={cookies.auth_redirect} client={cookies.auth_client} login_challenge={cookies.login_challenge}/>
+          
+            <InfoBanner/>
+            </>
+            : <></>
+          }
       </Modal>
+      <ProfileBanner/>
+      <ToastContainer/>
     </Web3Providers>
   )
 }

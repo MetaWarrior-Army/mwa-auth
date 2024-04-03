@@ -3,7 +3,7 @@ import Image from 'next/image'
 
 export function Page(props: { children: ReactNode }) {
   return(
-    <main className="flex font-mono min-h-screen flex-col items-center justify-between p-5">
+    <main className="flex font-mono flex-col items-center justify-between p-5">
       {props.children}
     </main>
   )
@@ -14,13 +14,10 @@ export function Header ({title}:{
 }) {
   return (
     <div className="flex">
-      <div className="w-full text-start">
-        <Image src="https://www.metawarrior.army/media/img/logo.png" alt="github_icon" width={300} height={10}/>
-      </div>
-      <div className="text-xs text-slate-300 text-end font-bold w-full">
-        <p>{title}</p>
-      </div>
       
+        <Image src="https://www.metawarrior.army/media/img/logo.png" alt="github_icon" width={300} height={10}/>
+
+
     </div>
     )
 }

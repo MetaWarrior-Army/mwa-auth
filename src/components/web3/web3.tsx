@@ -19,12 +19,12 @@ export function ProfileBanner() {
     }
   }
   return(
-    <div className="text-base leading-7 dark:text-slate-400" id="avatar" hidden={isConnected ? false : true} >
-      <div className="p-2">
-        <Blockies seed={address ? address.toLowerCase(): ''} size={8} scale={8} className="rounded-lg shadow-xl"/>
+    <div className="flex mx-auto w-full p-5">
+      <div className="flex-col justify-center justify-items-center dark:text-slate-400" id="avatar" hidden={isConnected ? false : true} >
+        <Blockies seed={address ? address.toLowerCase(): ''} size={8} scale={4} className="rounded-lg shadow-xl"/>  
+        {address && <p className="text-yellow-500">{ensName ? `${ensName} (${sliceWallet(address)})` : sliceWallet(address)}</p>}
+        <p className="text-xs">Wallet Connected</p>
       </div>
-      {address && <p className="text-yellow-500">{ensName ? `${ensName} (${sliceWallet(address)})` : sliceWallet(address)}</p>}
-      <p className="text-xs">Wallet Connected</p>
     </div>
   )
 }

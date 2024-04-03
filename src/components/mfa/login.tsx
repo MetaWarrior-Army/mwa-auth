@@ -5,9 +5,11 @@ import { useAccount } from 'wagmi'
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { startAuthentication } from '@simplewebauthn/browser'
+import { useEffect, useState } from 'react'
+import { toasterNotify } from '@/utils/toast/toaster'
 
 
-export function VerifyMfaModal({client, redirect, login_challenge}:{
+export function MfaLoginModal({client, redirect, login_challenge}:{
   client: string,
   redirect: string,
   login_challenge: string,
@@ -15,15 +17,24 @@ export function VerifyMfaModal({client, redirect, login_challenge}:{
   const { address } = useAccount()
   const { isConnected } = useAccount()
   const router = useRouter();
+  const [isVerified,setIsVerified] = useState(false)
 
 
   // SignIn with Next-Auth and SIWE
-  async function loginButton() {  
+  async function verifyMFA() {  
     // Get authOpts
     const authOpts = await mfaClientGetAuthOptions(address as string)
     // Start authentication client-side
-    const verifyResponse = await startAuthentication(authOpts)
+    let verifyResponse
+    try {
+      verifyResponse = await startAuthentication(authOpts)
+    } catch (e) {
+      toasterNotify({message:'Failed to verify security key',type:'error'})
+    }
+    
     // Validate authentication response
+    console.log('Verification response')
+    console.log(verifyResponse)
     const signInResult = await signIn("MWA",{
       message: JSON.stringify(verifyResponse),
       signature: '0x0',
@@ -34,6 +45,7 @@ export function VerifyMfaModal({client, redirect, login_challenge}:{
     if(!signInResult) return false
     // User is signed in
     if(signInResult?.ok){
+      toasterNotify({message:'Verified',type:'success'})
       // Redirect non OAuth users
       if(client!=='oauth') window.location.href=redirect
       if(!login_challenge) throw Error('No login_challenge')
@@ -49,20 +61,18 @@ export function VerifyMfaModal({client, redirect, login_challenge}:{
       if(acceptLoginRes.error) throw Error(acceptLoginRes.error)
       // Redirect OAuth User
       router.push(acceptLoginRes.redirect_to)
-
+      setIsVerified(true)
     }
-    return true;
+    return false;
   }
 
   return (
     <div className="space-y-6 py-8 text-base leading-7 dark:text-slate-400">
-      <p>Login to <b>MetaWarrior Army</b></p>
-      <p className="text-xs">Verify your account with one of your registered keys.</p>
-      <p>::</p>
+      <p className="">Verify your account with one of your registered security keys.</p>
       <div id="login">
         <button hidden={isConnected ? false : true}
           className="bg-slate-950 p-2 text-yellow-500 rounded-lg w-full shadow-xl border-solid border-2 hover:border-dotted border-yellow-500"
-          onClick={() => loginButton()}>Verify</button>
+          onClick={() => verifyMFA()}>Verify</button>
       </div>
       <ConnectWalletModal showDisconnect={false}/>
     </div>

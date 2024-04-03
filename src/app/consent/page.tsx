@@ -1,6 +1,6 @@
 'use client'
 
-import { QuestionsBanner, Modal } from '@/components/app/page'
+import { Modal, InfoBanner } from '@/components/app/page'
 import { ProfileBanner } from '@/components/web3/web3'
 import { ConsentModal } from '@/components/app/consent'
 import Web3Providers  from '@/app/web3providers'
@@ -13,7 +13,6 @@ export default function ConsentPage() {
   const [consentChallenge,setConsentChallenge] = useState('')
   const [clientName,setClientName] = useState('')
   const [logoUri,setLogoUri] = useState('')
-
   
   useEffect(() => {
       if(redirect){
@@ -47,7 +46,7 @@ export default function ConsentPage() {
           
           <ConsentModal clientName={clientName} logoUri={logoUri} consentChallenge={consentChallenge} />
             
-          <QuestionsBanner/>
+          <InfoBanner/>
         </Modal>
       </Web3Providers>
     )

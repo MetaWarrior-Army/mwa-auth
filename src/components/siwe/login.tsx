@@ -4,21 +4,9 @@ import { useAccount, useSignMessage } from 'wagmi'
 import { SiweMessage } from 'siwe'
 import { useRouter } from "next/navigation"
 import { signIn } from 'next-auth/react'
+import { toasterNotify } from '@/utils/toast/toaster'
 
-
-// This is the login function. 
-// This is where we control the user flow
-// First thing we need to know is where the user
-// is going next.
-
-// The first thing we check is whether or not we 
-// can get an MFA Session from the server.
-// If so, we know we're sending the user there afterwards
-
-// Otherwise we either send the user to /consent for oauth clients
-// or to a previously provided redirect
-
-export function SIWEVerifyModal({client, redirect, login_challenge}:{
+export function SIWELoginModal({client, redirect, login_challenge}:{
   client: string,
   redirect: string,
   login_challenge?: string
@@ -29,7 +17,7 @@ export function SIWEVerifyModal({client, redirect, login_challenge}:{
   const router = useRouter();
 
   // SignIn with Next-Auth and SIWE
-  async function loginButton() {
+  async function login() {
     // Generate message
     const message = new SiweMessage({
       domain: window.location.host,
@@ -40,10 +28,16 @@ export function SIWEVerifyModal({client, redirect, login_challenge}:{
       chainId: 1,
     })
     // User signs message client-side
-    const signature = await signMessageAsync({
-      account: address,
-      message: message.prepareMessage(),
-    })
+    let signature
+    try{
+      signature = await signMessageAsync({
+        account: address,
+        message: message.prepareMessage(),
+      })
+    }
+    catch(e: any) {
+      toasterNotify({message:'Failed to sign message',type:'error'})
+    }
     // Verify message - Supports MFA Session Creation
     const verifyReq = await fetch('/api/siwe/verify', {
       method: 'POST',
@@ -52,8 +46,9 @@ export function SIWEVerifyModal({client, redirect, login_challenge}:{
     })
     const verifyRes = await verifyReq.json()
     if(!verifyRes) return false
-    // Redirect user
+    // SIWE Verified
     if(verifyRes.verified){
+      toasterNotify({message:'Verified',type:'success'})
       // Redirect to MFA - signIn() happens on mfa page
       if(verifyRes.mfa_session){
         const mfaRedirect = 'https://auth.metawarrior.army/mfa/verify?address='+encodeURIComponent(address as string)+'&mfasession='+encodeURIComponent(verifyRes.mfa_session)
@@ -84,32 +79,22 @@ export function SIWEVerifyModal({client, redirect, login_challenge}:{
           if(acceptLoginRes.error) throw Error(acceptLoginRes.error)
           // Redirect user
           router.push(acceptLoginRes.redirect_to)
-        }  
+        }
       }
-      else{
-        console.log('/components/siwe/verify: Failed to signIn()')
-      }
+      return false
     }
-
-    return true;
+    return false;
   }
 
   return (
     <div className="space-y-6 py-8 text-base leading-7 dark:text-slate-400">
-      <p>Login to <b>MetaWarrior Army</b></p>
-      
-      <p className="text-xs">Sign a message with your wallet to <b>Log In</b>.</p>
-      
-      <p>::</p>
-      
+      <p>Sign a message with your wallet to <b>Log In</b>.</p>
       <div id="login">
         <button hidden={isConnected ? false : true}
           className="bg-slate-950 p-2 text-yellow-500 rounded-lg w-full shadow-xl border-solid border-2 hover:border-dotted border-yellow-500"
-          onClick={() => loginButton()}>Login</button>
+          onClick={() => login()}>Login</button>
       </div>
-
       <ConnectWalletModal showDisconnect={true}/>
-      
     </div>
   )
 }

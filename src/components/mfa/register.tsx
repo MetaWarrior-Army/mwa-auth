@@ -1,5 +1,5 @@
 import { startRegistration } from '@simplewebauthn/browser'
-import { toast, Slide } from 'react-toastify'
+import { toasterNotify } from '@/utils/toast/toaster'
 
 // Register new MFA Key
 export function RegisterMFAModal({onRegister}: {onRegister: any}) {
@@ -35,46 +35,13 @@ export function RegisterMFAModal({onRegister}: {onRegister: any}) {
       const registerResult = await register(attestationResponse)
       console.log(registerResult)
       if(registerResult.verified){
-        toast.success('New Key Registered!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          transition: Slide,
-        })
+        toasterNotify({message:'New Key Registered!',type:'success'})
         // Update UI
         onRegister()
       }
-      else{
-        toast.error(registerResult.error, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          transition: Slide,
-        })
-      }
     }
     catch(e: any){
-      toast.error(e.message, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Slide,
-      })
+      toasterNotify({message:e.message,type:'error'})
     }
   }
 

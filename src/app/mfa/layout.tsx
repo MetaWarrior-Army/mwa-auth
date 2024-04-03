@@ -10,9 +10,13 @@ export default function MfaLayout({
   
   return (
       <Page>
+  
         <Header title="MFA"/>
+  
         <Frame>
+
           {children}
+
         </Frame>
         <Footer/>
       </Page>

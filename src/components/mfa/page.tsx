@@ -1,4 +1,4 @@
-import { toast, Slide } from 'react-toastify'
+import { toasterNotify } from '@/utils/toast/toaster'
 
 export function ShowKeyCount({keycount}: {
   keycount: number
@@ -16,31 +16,11 @@ export function RevokeAllKeysModal({onRevoke}: {onRevoke: any}){
     const revokeRes = await revokeReq.json()
     console.log(revokeRes)
     if(revokeRes.revoked){
-      toast.success('All Keys Revoked!', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Slide,
-      })
+      toasterNotify({message:'All Keys Revoked!',type:'success'})
       onRevoke()
     }
     else {
-      toast.error(revokeRes.error, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Slide,
-      })
+      toasterNotify({message:revokeRes.error,type:'error'})
     }
   }
   return (
