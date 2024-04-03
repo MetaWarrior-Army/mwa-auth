@@ -8,3 +8,6 @@ export const RP_ORIGIN = process.env.RP_ORIGIN as string
 export const MFA_DB_TABLE = process.env.MFA_DB_TABLE as string
 // Max MFA creds per user
 export const MAX_MFA_PER_USER = 3
+// MFA Session Lifetime in milliseconds
+// 3 * 60000 = 3 minutes
+export const MAX_MFA_SESSION_AGE = (3 * 60000)

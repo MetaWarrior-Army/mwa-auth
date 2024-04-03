@@ -5,7 +5,7 @@ import {getOAuth2ConsentRequest,
   genOAuthClientToken,
   rejectOAuth2ConsentRequest
 } from '@/utils/hydra/admin'
-import {APP_DOMAIN} from '@/utils/app/constants'
+import {APP_BASE_URL} from '@/utils/app/constants'
 import {PROTECTED_OAUTH_CLIENTS,
   OAUTH_CONSENT_SKIP,
   OAUTH_CONSENT_REMEMBER} from '@/utils/hydra/constants'
@@ -23,7 +23,7 @@ export async function consentMiddleware(req: NextRequest) {
   if(!consentRequest) return NextResponse.json({error:'Failed to get consent request',status:500})
   if(consentRequest.redirect_to) return NextResponse.redirect(consentRequest.redirect_to)
   // Get MwaUser from /api
-  const getUserReq = await fetch('https://'+APP_DOMAIN+'/api/getMwaUser',{
+  const getUserReq = await fetch(APP_BASE_URL+'/api/getMwaUser',{
     method: 'POST',
     headers: {'Content-type':'application/json'},
     body: JSON.stringify({secret: SECRET_HASH, address: consentRequest.subject})

@@ -7,10 +7,11 @@ import { toasterNotify } from '@/utils/toast/toaster'
 import { mwaSignIn } from '@/utils/next-auth/signin'
 
 
-export function MfaLoginModal({client, redirect, login_challenge}:{
+export function MfaLoginModal({client, redirect, login_challenge, mfa_session}:{
   client: string,
   redirect: string,
   login_challenge: string,
+  mfa_session: string,
 }) {
   const { address } = useAccount()
   const { isConnected } = useAccount()
@@ -25,21 +26,21 @@ export function MfaLoginModal({client, redirect, login_challenge}:{
     try {
       verifyResponse = await startAuthentication(authOpts)
     } catch (e) {
-      toasterNotify({message:'Failed to verify security key',type:'error'})
+      toasterNotify({message:'Failed to verify security key.',type:'error'})
     }
     // Got response
     if(verifyResponse){
       const signInResult = await mwaSignIn({
         message: verifyResponse,
-        signature: '0x0',
+        signature: mfa_session,
         type: 'mfa',
         address: address as string,
         login_challenge: login_challenge as string,
-        mfasession: '',
         auth_client: client,
         auth_redirect: redirect,
       })
       if(!signInResult) return false
+      toasterNotify({message:'Verified!',type:'success'})
       // SignIn successful, redirect
       router.push(signInResult)
     }

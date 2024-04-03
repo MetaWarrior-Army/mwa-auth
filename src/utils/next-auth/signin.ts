@@ -1,24 +1,25 @@
 import { signIn } from 'next-auth/react'
 
-type MwaSignInMessage = {
+export type MwaSignInMessage = {
+  address: string,
   message: any,
   signature: string,
   type: string,
-  address: string,
   login_challenge: string,
-  mfasession?: string,
   auth_client: string,
   auth_redirect: string,
 }
 
+// Mwa Wrapper for Next-Auth SignIn
+// Controls redirect and handles OAuth
 export async function mwaSignIn(signInMessage: MwaSignInMessage){
   // User doesn't have MFA, we need to signIn()
   const signInResult = await signIn("MWA", {
+    address: signInMessage.address,
     message: JSON.stringify(signInMessage.message),
-    redirect: false,
     signature: signInMessage.signature,
     type: signInMessage.type,
-    address: signInMessage.address,
+    redirect: false,
   })
   if(!signInResult) return undefined
   // If signin successful, accept login and redirect    

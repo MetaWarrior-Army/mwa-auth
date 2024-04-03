@@ -18,7 +18,6 @@ export default function VerifyMfaPage() {
     if(redirect == ''){
       if(cookies.auth_redirect){
         setRedirect(cookies.auth_redirect)
-        console.log('Set redirect to: '+cookies.auth_redirect)
       }
     }
   },[redirect,cookies])
@@ -30,7 +29,7 @@ export default function VerifyMfaPage() {
       <Modal>
         {cookies ? 
           <>
-            <MfaLoginModal client={cookies.auth_client} redirect={redirect} login_challenge={cookies.login_challenge}/>
+            <MfaLoginModal client={cookies.auth_client} redirect={cookies.auth_redirect} login_challenge={cookies.login_challenge} mfa_session={cookies.mfa_session}/>
           </> : <></>
         }
       </Modal>

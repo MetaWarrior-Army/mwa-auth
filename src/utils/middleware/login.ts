@@ -2,6 +2,8 @@ import {NextRequest, NextResponse} from 'next/server'
 import {getOAuth2LoginRequest,acceptOAuth2LoginRequest} from '@/utils/hydra/admin'
 import {OAUTH_LOGIN_SKIP,OAUTH_LOGIN_REMEMBER} from '@/utils/hydra/constants'
 import { APP_BASE_URL } from '@/utils/app/constants'
+import { getToken } from 'next-auth/jwt'
+import { AppSessionToken } from '../app/types'
 
 export async function loginMiddleware(req: NextRequest){
   console.log('middleware: /login')
@@ -17,9 +19,22 @@ export async function loginMiddleware(req: NextRequest){
     const loginRequest = await getOAuth2LoginRequest(login_challenge)
     if(!loginRequest) return NextResponse.json({error:'Failed to get login request',status:500})
     if(loginRequest.redirect_to) return NextResponse.redirect(new URL(loginRequest.redirect_to,req.url))
-    // Skip if directed to do so
+    // Skip if the user is already logged in
+    const token = await getToken({req}) as AppSessionToken
+    if(token && token.user.address){
+      console.log('middleware: /login: token: skipping login')
+      const acceptRequest = await acceptOAuth2LoginRequest(loginRequest.challenge,{
+        subject: token.user.address,
+        remember: OAUTH_LOGIN_SKIP,
+        remember_for: OAUTH_LOGIN_REMEMBER,
+      })
+      if(!acceptRequest) return NextResponse.json({error:'Failed to accept oauth login'})
+      // Redirect user
+      return NextResponse.redirect(new URL(acceptRequest.redirect_to,req.url))
+    }
+    // Skip if directed to do so by OAuth
     if(loginRequest.skip){
-      console.log('middleware: /login: skipping login')
+      console.log('middleware: /login: oauth: skipping login')
       // Accept Login Request with OAuth Server
       const acceptRequest = await acceptOAuth2LoginRequest(loginRequest.challenge,{
         subject: loginRequest.subject,

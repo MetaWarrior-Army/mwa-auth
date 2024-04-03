@@ -34,7 +34,7 @@ export function VerifyMFAModal() {
       }
     }
     catch(e: any) {
-      toasterNotify({message:e.message,type:'error'})
+      toasterNotify({message:'Failed to verify key.',type:'error'})
     }
   }
 

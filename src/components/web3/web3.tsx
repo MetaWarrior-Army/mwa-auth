@@ -38,13 +38,6 @@ export function ConnectWalletModal({showDisconnect,getMFASession}:{
   const { address, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
   const { connectors, connect } = useConnect()
-  // Is the wallet connected?
-  if(isConnected) {
-    console.log('Wallet connected: '+address)
-  }
-  else{
-    console.log('Wallet disconnected')
-  }
   // Wallet Option Component for connecting wallet
   function WalletOption({
     connector,

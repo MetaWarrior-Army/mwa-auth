@@ -1,8 +1,10 @@
 import dbConn from '@/utils/app/db/conn'
 import { MfaCredential } from '../types'
-import { MFA_DB_TABLE } from '../constants'
+import { MFA_DB_TABLE, MAX_MFA_SESSION_AGE } from '../constants'
 import { getRandomString } from '@/utils/rand'
 import { sha512 } from '@/utils/sha512'
+import { getMwaUser } from '@/utils/app/db/utils'
+import { MwaUser } from '@/utils/app/types'
 
 
 // CREATE MFA CREDENTIAL 
@@ -120,5 +122,23 @@ export async function clearMfaSession(address: string) {
   const updateQuery = "UPDATE users SET current_mfa_session=NULL WHERE address='"+address+"'"
   const updateRes = await dbConn.query(updateQuery)
   if(updateRes.rowCount == 0 ) return undefined
+  return true
+}
+
+// VALIDATE MFA SESSION
+export async function validateMfaSession(address: string, credentials: string) {
+  // Get user
+  const user = await getMwaUser(address) as MwaUser
+  if(!user) return undefined
+  // Verify credentials
+  const sessionHashed = await sha512(user.current_mfa_session as string)
+  if(credentials !== sessionHashed) return undefined
+  // Check age  
+  const maxAge = Date.now() - MAX_MFA_SESSION_AGE
+  if(maxAge > user.updated_at.getTime()) return undefined
+  // Update session
+  const newSession = updateMfaSession(address)
+  if(!newSession) return undefined
+  // Validated
   return true
 }

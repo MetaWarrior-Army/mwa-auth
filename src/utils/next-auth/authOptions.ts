@@ -1,18 +1,23 @@
 import { createMwaUser, getMwaUser } from '@/utils/app/db/utils'
 import { MwaUser } from '@/utils/app/types'
+import { APP_DOMAIN, NEXTAUTH_SECRET } from '@/utils/app/constants'
+import { verifyCredentialAuthenticationResponse } from '../mfa/verify'
+import { getMfaCredentials, validateMfaSession } from '../mfa/db/utils'
+import { MfaCredential } from '../mfa/types'
 import CredentialsProvider from "next-auth/providers/credentials"
 import { SiweMessage } from 'siwe'
 import { NextAuthOptions } from 'next-auth'
-import { verifyCredentialAuthenticationResponse } from '../mfa/verify'
-import { getMfaCredentials } from '../mfa/db/utils'
-import { MfaCredential } from '../mfa/types'
-import { NEXTAUTH_SECRET, NEXTAUTH_URL } from '@/utils/app/constants'
 
 
 export const MWAProvider = CredentialsProvider({
   id: 'MWA',
   name: "Ethereum",
   credentials: {
+    address: {
+      label: "Address",
+      type: "text",
+      placeholder: "0x0",
+    },
     message: {
       label: "Message",
       type: "text",
@@ -28,26 +33,25 @@ export const MWAProvider = CredentialsProvider({
       type: "text",
       placeholder: 'siwe',
     },
-    address: {
-      label: "Address",
-      type: "text",
-      placeholder: "0x0",
-    },
   },
+
+  // Establish Server Side Session
+  // Supports SIWE and WebAuthn
   async authorize(credentials) {
-    console.log('signIn: ')
+    console.log('/utils/next-auth/authOptions: ')
 
     // SIWE login
+    // This is the first signature we ever receive from the user.
+    // If the user doesn't exist, we create them here.
     if(credentials && credentials.type == 'siwe'){
-      console.log('next-auth authrorize() credential.type: siwe: ')
+      console.log('/utils/next-auth/authOptions: siwe: ')
       try {
         // Get SIWE Message
         const siwe = new SiweMessage(JSON.parse(credentials?.message || "{}"))
-        const nextAuthUrl = new URL(NEXTAUTH_URL)
         // Verify Message
         const result = await siwe.verify({
           signature: credentials?.signature || "",
-          domain: nextAuthUrl.host,
+          domain: APP_DOMAIN,
         })
         // Authentication successful, check for existing user or create one if needed
         if (result.success) {
@@ -82,26 +86,32 @@ export const MWAProvider = CredentialsProvider({
     }
 
     // MFA login (Simple WebAuthn)
-    // We only allow previously created users the opportunity to
-    // register WebAuthn keys in our database
+    // User has already authenticated with SIWE and received a MFA Session
     else if(credentials && credentials.type == 'mfa'){
-      console.log('next-auth authrorize() credential.type: mfa: ')
-      // Get User
-      const user = await getMwaUser(credentials.address)
-      if(!user) return null
-      // get message
-      const body = JSON.parse(credentials.message)
-      // Verify User
-      const verified = await verifyCredentialAuthenticationResponse(user,body)
-      if(!verified) return null
-      // Return user
-      return {
-        id: user.address,
-        user: user,
+      console.log('/utils/next-auth/authOptions: mfa: ')
+      // Validate signature (MFA Session)
+      const validSession = await validateMfaSession(credentials.address,credentials.signature)
+      if(!validSession) return null
+      // Valid Session
+      if(validSession){
+        // Get message
+        const body = JSON.parse(credentials.message)
+        // Get User
+        const user = await getMwaUser(credentials.address)
+        if(!user) return null
+        // Verify User
+        const verified = await verifyCredentialAuthenticationResponse(user,body)
+        if(!verified) return null
+        // Return user
+        return {
+          id: user.address,
+          user: user,
+        }
       }
     }
 
-    console.log('next-auth authorize(): Invalid credentials')
+    // signIn() failed
+    console.log('/utils/next-auth/authOptions: Invalid credentials')
     return null
   },
 })

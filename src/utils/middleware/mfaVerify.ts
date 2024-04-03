@@ -14,18 +14,19 @@ export async function mfaVerifyMiddleware(req: NextRequest) {
   if(!mfaSession || !address) return NextResponse.json({error:'Invalid parameters',status:500})
   // Validate session - ping API
   const SECRET_HASH = await sha512(PRIVATE_API_KEY)
-  const verifyMfaSessionReq = await fetch(APP_BASE_URL+'/api/mfa/validateSession',{
+  const verifySessionReq = await fetch(APP_BASE_URL+'/api/mfa/validateSession',{
     method: 'POST',
     headers: {'Content-type':'application/json'},
     body: JSON.stringify({secret: SECRET_HASH, address: address, session: mfaSession})
   })
-  const verifyMfaSessionRes = await verifyMfaSessionReq.json()
+  const verifySessionRes = await verifySessionReq.json()
   // Check response
-  if(!verifyMfaSessionRes) return NextResponse.json({error:'Failed to verify MFA Session via /api',status:500})
-  if(verifyMfaSessionRes.verified){
-    
+  if(!verifySessionRes) return NextResponse.json({error:'Failed to verify MFA Session via /api',status:500})
+  if(verifySessionRes.verified){
     // Return response
-    return NextResponse.next()
+    const resp = NextResponse.next()
+    resp.cookies.set('mfa_session',mfaSession)
+    return resp
   }
   
   // This should never happen because we verify above

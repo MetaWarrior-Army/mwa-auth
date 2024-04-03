@@ -33,7 +33,6 @@ export function RegisterMFAModal({onRegister}: {onRegister: any}) {
       const attestationResponse = await startRegistration(options)
       // Validate registration response
       const registerResult = await register(attestationResponse)
-      console.log(registerResult)
       if(registerResult.verified){
         toasterNotify({message:'New Key Registered!',type:'success'})
         // Update UI

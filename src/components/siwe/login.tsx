@@ -36,7 +36,7 @@ export function SIWELoginModal({client, redirect, login_challenge}:{
       })
     }
     catch(e: any) {
-      toasterNotify({message:'Failed to sign message',type:'error'})
+      toasterNotify({message:'Failed to sign message.',type:'error'})
     }
     // Verify message - Supports MFA Session Creation
     const verifyReq = await fetch('/api/siwe/verify', {
@@ -48,7 +48,7 @@ export function SIWELoginModal({client, redirect, login_challenge}:{
     if(!verifyRes) return false
     // SIWE Verified
     if(verifyRes.verified){
-      toasterNotify({message:'Verified',type:'success'})
+      toasterNotify({message:'Verified!',type:'success'})
       // Redirect to MFA - signIn() happens on mfa page
       if(verifyRes.mfa_session){
         const mfaRedirect = 'https://'+APP_DOMAIN+'/mfa/verify?address='+encodeURIComponent(address as string)+'&mfasession='+encodeURIComponent(verifyRes.mfa_session)
@@ -61,7 +61,6 @@ export function SIWELoginModal({client, redirect, login_challenge}:{
         type: 'siwe',
         address: address as string,
         login_challenge: login_challenge as string,
-        mfasession: '',
         auth_client: client,
         auth_redirect: redirect,
       })
