@@ -1,5 +1,6 @@
 import { ReactNode } from "react"
 import Image from 'next/image'
+import { ProfileBanner } from '@/components/web3/web3'
 
 export function Page(props: { children: ReactNode }) {
   return(
@@ -13,10 +14,13 @@ export function Header ({title}:{
   title: string
 }) {
   return (
-    <div className="flex">
-      
+    <div className="flex justify-between items-center p-3">
+      <div className="">
         <Image src="https://www.metawarrior.army/media/img/logo.png" alt="github_icon" width={300} height={10}/>
-
+      </div>
+      <div className="">
+        <ProfileBanner/>
+      </div>
 
     </div>
     )

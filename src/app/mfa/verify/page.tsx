@@ -1,13 +1,14 @@
 'use client'
 
 import { FrameHeader, Modal } from '@/components/app/page'
-import Web3Providers  from '@/app/web3providers'
 import {useState,useEffect} from 'react'
 import Cookies from 'js-cookie'
 import { MfaLoginModal } from '@/components/mfa/login'
-import { ProfileBanner } from '@/components/web3/web3'
 import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css'
+import { Page, Header, Frame, Footer } from '@/components/app/layout'
+import Web3Providers  from '@/app/web3providers'
+
 
 // Login
 export default function VerifyMfaPage() {
@@ -25,16 +26,21 @@ export default function VerifyMfaPage() {
   return (
     <>
     <Web3Providers>
-      <FrameHeader title="Multi-Factor Authentication"/>
-      <Modal>
-        {cookies ? 
-          <>
-            <MfaLoginModal client={cookies.auth_client} redirect={cookies.auth_redirect} login_challenge={cookies.login_challenge} mfa_session={cookies.mfa_session}/>
-          </> : <></>
-        }
-      </Modal>
-      <ProfileBanner/>
-      <ToastContainer/>
+      <Header title="MFA"/>
+      <Page>
+        <Frame>
+          <Modal>
+            <FrameHeader title="Multi-Factor Authentication"/>
+
+            {cookies ? 
+              <>
+                <MfaLoginModal client={cookies.auth_client} redirect={cookies.auth_redirect} login_challenge={cookies.login_challenge} mfa_session={cookies.mfa_session}/>
+              </> : <></>
+            }
+          </Modal>
+          <ToastContainer/>
+        </Frame>
+      </Page>
     </Web3Providers>
     </>
   )

@@ -1,4 +1,6 @@
-import { useAccount, 
+'use client'
+
+import { useAccount,
   useDisconnect, 
   //useEnsAvatar, 
   useEnsName, 

@@ -1,11 +1,11 @@
 'use client'
 
-import { Modal, InfoBanner } from '@/components/app/page'
-import { ProfileBanner } from '@/components/web3/web3'
+import { Modal, InfoBanner, FrameHeader } from '@/components/app/page'
 import { ConsentModal } from '@/components/app/consent'
-import Web3Providers  from '@/app/web3providers'
 import Cookies from 'js-cookie'
 import { useState, useEffect } from 'react'
+import { Page, Header, Frame, Footer } from '@/components/app/layout'
+import Web3Providers  from '@/app/web3providers'
 
 export default function ConsentPage() {
   const cookies = Cookies.get()
@@ -40,15 +40,23 @@ export default function ConsentPage() {
   }
   else{
     return (
+      <>
       <Web3Providers>
-        <Modal>
-          <ProfileBanner/>
-          
-          <ConsentModal clientName={clientName} logoUri={logoUri} consentChallenge={consentChallenge} />
-            
-          <InfoBanner/>
-        </Modal>
+        <Header title="Consent"/>
+        <Page>
+          <Frame>
+            <FrameHeader title="Do You Authorize?"/>
+            <Modal>
+              
+              <ConsentModal clientName={clientName} logoUri={logoUri} consentChallenge={consentChallenge} />
+                
+              <InfoBanner/>
+            </Modal>
+          </Frame>
+          <Footer/>
+        </Page>
       </Web3Providers>
+      </>
     )
   }
   

@@ -4,7 +4,6 @@ import { consentMiddleware } from '@/utils/middleware/consent'
 import { logoutMiddleware } from '@/utils/middleware/logout'
 import { mfaVerifyMiddleware } from '@/utils/middleware/mfaVerify'
 import { mfaMiddleware } from '@/utils/middleware/mfa'
-import { signoutMiddleware } from '@/utils/middleware/signout'
 
 // Middleware
 export default async function middleware(req: NextRequest) {
@@ -35,12 +34,6 @@ export default async function middleware(req: NextRequest) {
   else if (req.nextUrl.pathname.startsWith('/mfa')) {
     return mfaMiddleware(req)
   }
-
- 
-  // Middleware for /signout
-  else if(req.nextUrl.pathname.startsWith('/signout')) {
-    return signoutMiddleware(req)
-  }
 }
 
 
@@ -51,7 +44,6 @@ export const config = {
      * - login
      * - consent
      * - logout
-     * - signout
      * - mfa
      * - mfa/verified
      * NOT:
@@ -62,7 +54,7 @@ export const config = {
      * - favicon.ico (favicon file)
      */
     {
-      source: '/((?!api|_next|_next\/static|_next\/image|favicon.ico))(login|consent|logout|mfa|mfa\/verify|signout)',
+      source: '/((?!api|_next|_next\/static|_next\/image|favicon.ico))(login|consent|logout|mfa|mfa\/verify)',
       missing: [
         { type: 'header', key: 'next-router-prefetch' },
         { type: 'header', key: 'purpose', value: 'prefetch' },

@@ -1,6 +1,6 @@
-import { Page, Header, Frame, Footer } from '@/components/app/layout'
+import { Page, Frame, Footer } from '@/components/app/layout'
 
-export default function SigninLayout({
+export default function LogoutLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -8,7 +8,6 @@ export default function SigninLayout({
 
   return (
     <Page>
-      <Header title="Sign Out"/>
       <Frame>
         {children}
       </Frame>

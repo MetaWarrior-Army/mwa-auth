@@ -3,14 +3,16 @@
 import {signOut} from 'next-auth/react'
 import Cookies from 'js-cookie'
 import {useState,useEffect} from 'react'
+import { useRouter } from 'next/navigation'
 
-export default function SignoutPage() {
+export default function LogoutPage() {
   const [redirect,setRedirect] = useState('')
   const cookies = Cookies.get()
+  const router = useRouter()
 
   // Process Sign Out
   useEffect(() => {
-    async function processSignOut() {
+    async function processLogout() {
       // No redirect set
       if(redirect == ''){
         // Check cookies
@@ -19,15 +21,15 @@ export default function SignoutPage() {
         }
       }
       // Sign Out and handle redirect
-      else{
+      else if(redirect){
         const resp = await signOut({redirect: false})
         if(resp.url) {
-          window.location.href = redirect
+          router.push(redirect)
         }
       }
     }
-    processSignOut()
-  }, [redirect,cookies])
+    processLogout()
+  }, [redirect,cookies,router])
 
   return (
     <div className="relative px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10">

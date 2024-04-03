@@ -1,18 +1,24 @@
 import { ReactNode } from "react"
-import { APP_DOMAIN } from '@/utils/app/constants'
+import { APP_BASE_URL } from '@/utils/app/constants'
 
-export function InfoBanner({signOutRedirect}: {
+export function InfoBanner({signOutRedirect}:{
   signOutRedirect?:string,
 }) {
   return (
+    <>
     <div className="pt-8 text-base font-semibold leading-7">
-      <p className="text-slate-200">Questions?</p>
-      <p><a href="https://www.metawarrior.army" className="text-yellow-500 hover:text-yellow-700">Answers &rarr;</a></p>
+      <p><a href="https://www.metawarrior.army" className="text-yellow-500 hover:text-yellow-700">MetaWarrior Army &rarr;</a></p>
       {signOutRedirect ? 
-        <p><a href={'https://'+APP_DOMAIN+'/signout?redirect='+signOutRedirect} className="text-slate-500 hover:text-slate-700">Signout &rarr;</a></p>
-        :<></>
+        <>
+          <p>
+            <a href={APP_BASE_URL+'/logout?redirect='+signOutRedirect} className="text-slate-500 hover:text-slate-700">
+              Logout &rarr;</a>
+          </p>
+        </>
+        : <></>
       }      
     </div>
+    </>
   )
 }
 
@@ -24,18 +30,6 @@ export function Modal(props: { children: ReactNode }) {
           {props.children}
         </div>
       </div>
-    </div>
-  )
-}
-
-export function SignOutModal({redirect}:{
-  redirect: string
-}){
-  return (
-    <div id="signout" className="flex p-2">
-      <button 
-        className="bg-slate-950 p-2 w-full text-slate-500 rounded-lg shadow-xl border-solid border-2 hover:border-dotted border-slate-500"
-        onClick={() => {window.location.href='/signout?redirect='+redirect}}>Sign Out</button>
     </div>
   )
 }
