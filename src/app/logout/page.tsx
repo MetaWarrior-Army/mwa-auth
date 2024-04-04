@@ -24,7 +24,7 @@ export default function LogoutPage() {
       else if(redirect){
         const resp = await signOut({redirect: false})
         if(resp.url) {
-          router.push(redirect)
+          window.location.href=redirect
         }
       }
     }
