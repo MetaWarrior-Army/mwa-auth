@@ -11,26 +11,40 @@ const NEXTAUTH_URL = process.env.NEXTAUTH_URL as string
 // registered.
 export async function POST(req: NextRequest) {
   console.log('/api/siwe/verify: POST')
+  
   // Get parameters
-  const {message,signature} = await req.json()
+  //const {message,signature} = await req.json()
+  const {id,msg} = await req.json()
+  if(!id || !msg) return NextResponse.json({error:'Invalid parameters'})
+
+  // Decode parameters
+  const signature = atob(id)
+  const message = JSON.parse(atob(msg))
+
+  //
   // Get SIWE Message
   const siwe = new SiweMessage(message)
   const nextAuthUrl = new URL(NEXTAUTH_URL)
+  
   // Verify Message
   const result = await siwe.verify({
     signature: signature || "",
     domain: nextAuthUrl.host,
   })
-  // Authentication successful, check for existing user or create one if needed
+  
+  // Authentication successful
   if (result.success) {
+  
     // Update user's mfa_session if they have MFA
     // Get Registration Options
     const credentials: MfaCredential[] = await getMfaCredentials(siwe.address)
     if(credentials.length > 0){
+  
       // Generate session string
       console.log('/api/siwe/verify: Updating MFA Session')
       const newSession = await updateMfaSession(siwe.address)
       if(!newSession) return NextResponse.json({error:'Failed to update MFA Session',status:500})
+      
       return NextResponse.json({verified: true, mfa_session: newSession, status:200})
     }
     return NextResponse.json({verified: true, status:200})

@@ -39,10 +39,13 @@ export function SIWELoginModal({client, redirect, login_challenge}:{
       toasterNotify({message:'Failed to sign message.',type:'error'})
     }
     // Verify message - Supports MFA Session Creation
+    // Encode parameters
+    const encodedmsg = btoa(JSON.stringify(message))
+    const encodedsig = btoa(signature as string)
     const verifyReq = await fetch('/api/siwe/verify', {
       method: 'POST',
       headers: {'Content-type':'application/json'},
-      body: JSON.stringify({message: message, signature: signature})
+      body: JSON.stringify({msg: encodedmsg, id: encodedsig})
     })
     const verifyRes = await verifyReq.json()
     if(!verifyRes) return false
