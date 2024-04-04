@@ -14,11 +14,12 @@ export type MwaSignInMessage = {
 // Controls redirect and handles OAuth
 export async function mwaSignIn(signInMessage: MwaSignInMessage){
   // User doesn't have MFA, we need to signIn()
+  // encode credentials
   const signInResult = await signIn("MWA", {
-    address: signInMessage.address,
-    message: JSON.stringify(signInMessage.message),
-    signature: signInMessage.signature,
-    type: signInMessage.type,
+    address: btoa(signInMessage.address),
+    message: btoa(JSON.stringify(signInMessage.message)),
+    signature: btoa(signInMessage.signature),
+    type: btoa(signInMessage.type),
     redirect: false,
   })
   if(!signInResult) return undefined

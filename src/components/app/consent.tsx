@@ -21,7 +21,7 @@ export function ConsentModal({ clientName, consentChallenge, logoUri}: {
   }
 
   // User disagrees
-  async function disagree() {
+  async function reject() {
     const rejectReq = await fetch('/api/oauth/rejectConsent', {
       method: 'POST',
       headers: {'Content-type':'application/json'},
@@ -35,7 +35,7 @@ export function ConsentModal({ clientName, consentChallenge, logoUri}: {
   }
 
   return (
-    <div className="space-y-6 py-8 text-base leading-7 dark:text-slate-400">
+    <div className="space-y-6 py-8 text-base leading-7 text-slate-400">
 
       <p>Share your profile with <span className="font-bold">{clientName}</span>?</p>
       <Image alt='logo_uri' width={60} height={60} className="mx-auto" src={logoUri} />
@@ -53,7 +53,7 @@ export function ConsentModal({ clientName, consentChallenge, logoUri}: {
         </p>
         <p className="p-2">
           <button
-            onClick={disagree}
+            onClick={reject}
             className="bg-slate-950 p-2 w-full text-slate-500 rounded-lg shadow-xl border-solid border-2 hover:border-dotted border-slate-500">
             Disagree
           </button>

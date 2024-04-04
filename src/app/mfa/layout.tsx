@@ -1,3 +1,4 @@
+import {Page, Header, Frame } from '@/components/app/layout'
 
 export default function MfaLayout({
   children,
@@ -8,7 +9,9 @@ export default function MfaLayout({
   
   return (
     <>
-    {children}
+    <Page>
+      {children}  
+    </Page>
     </>
   )
 }

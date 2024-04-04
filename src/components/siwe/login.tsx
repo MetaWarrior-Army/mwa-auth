@@ -51,7 +51,7 @@ export function SIWELoginModal({client, redirect, login_challenge}:{
       toasterNotify({message:'Verified!',type:'success'})
       // Redirect to MFA - signIn() happens on mfa page
       if(verifyRes.mfa_session){
-        const mfaRedirect = 'https://'+APP_DOMAIN+'/mfa/verify?address='+encodeURIComponent(address as string)+'&mfasession='+encodeURIComponent(verifyRes.mfa_session)
+        const mfaRedirect = 'https://'+APP_DOMAIN+'/mfa/verify?id='+encodeURIComponent(btoa(address as string))+'&session='+encodeURIComponent(btoa(verifyRes.mfa_session))
         router.push(mfaRedirect)
       }
       // Sign In

@@ -6,12 +6,17 @@ export async function mfaVerifyMiddleware(req: NextRequest) {
   console.log('middleware: /mfa/verify')
   
   // Get Parameters
-  const mfaSession = req.nextUrl.searchParams.get('mfasession')
-  const address = req.nextUrl.searchParams.get('address')
+  const codedSession = req.nextUrl.searchParams.get('session')
+  const id = req.nextUrl.searchParams.get('id')
 
   // Verify MFA session before giving the user the option to signIn()
   // This ensures the user is coming successfully from initially verifying with SIWE
-  if(!mfaSession || !address) return NextResponse.json({error:'Invalid parameters',status:500})
+  if(!codedSession || !id) return NextResponse.json({error:'Invalid parameters',status:500})
+  
+  // Decode parameters
+  const address = atob(id)
+  const mfaSession = atob(codedSession)
+  
   // Validate session - ping API
   const SECRET_HASH = await sha512(PRIVATE_API_KEY)
   const verifySessionReq = await fetch(APP_BASE_URL+'/api/mfa/validateSession',{

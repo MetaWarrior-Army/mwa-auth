@@ -18,10 +18,12 @@ export async function consentMiddleware(req: NextRequest) {
   // We should receive a consent_challenge
   const consent_challenge = req.nextUrl.searchParams.get('consent_challenge')
   if(!consent_challenge) return NextResponse.json({error:'invalid parameters',status:500})
+
   // Validate consent challenge or Error
   const consentRequest = await getOAuth2ConsentRequest(consent_challenge)
   if(!consentRequest) return NextResponse.json({error:'Failed to get consent request',status:500})
   if(consentRequest.redirect_to) return NextResponse.redirect(consentRequest.redirect_to)
+  
   // Get MwaUser from /api
   const getUserReq = await fetch(APP_BASE_URL+'/api/getMwaUser',{
     method: 'POST',
@@ -30,6 +32,7 @@ export async function consentMiddleware(req: NextRequest) {
   })
   const mwaUser = await getUserReq.json()
   if(!mwaUser) return NextResponse.json({error:'Failed to interact with /api/getMwaUser',status:500})
+  
   // Check protected OAuth clients
   if(!mwaUser.email_active) {
     if(PROTECTED_OAUTH_CLIENTS.includes(consentRequest.client.client_id)) {
@@ -40,13 +43,16 @@ export async function consentMiddleware(req: NextRequest) {
       return NextResponse.redirect(rejectReq.redirect_to)
     }
   }
+  
   // Build the response
   const resp = NextResponse.next()
   resp.cookies.delete('oauth_consent_redirect')
   resp.cookies.set('oauth_client_name',consentRequest.client.client_name)
   resp.cookies.set('oauth_logo_uri',consentRequest.client.logo_uri)
   resp.cookies.set('consent_challenge',consentRequest.challenge)
+  
   // Are we being asked to skip?
+  
   if(consentRequest.skip || consentRequest.client.skip_consent){
     console.log('skipping consent')
     // generate tokenData
@@ -62,6 +68,8 @@ export async function consentMiddleware(req: NextRequest) {
     // Set cookie for the client-side redirect
     resp.cookies.set('oauth_consent_redirect',acceptReq.redirect_to)
   }
+  
+  
   // Return response
   return resp
 }

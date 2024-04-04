@@ -51,32 +51,39 @@ export default function MfaPage() {
     <>
     <Web3Providers>
       <Header title="MFA"/>
-      <Page>
-        <Frame>
-          <Modal>
-            <FrameHeader title="Multi-Factor Authentication"/>
 
-            <div className="space-y-6 py-8 text-base leading-7 dark:text-slate-400">
-              <p>Register and verify up to 3 Passkeys or Security Keys.</p>
-              {(keyCount+1) > MAX_MFA_PER_USER ? <></> :
-                <>
-                  <RegisterMFAModal onRegister={()=>incrementKeyCount()}/>
-                </>
-              }
-              {hasKeys ? 
-                <>
-                  <VerifyMFAModal/>
-                  <ShowKeyCount keycount={keyCount}/>
-                  <RevokeAllKeysModal onRevoke={()=>clearKeyCount()}/>
-                </> : <></>
-              }
+      <Frame>
+
+        <Modal>
+          <FrameHeader title="Multi-Factor Authentication"/>
+
+          <div className="space-y-6 py-8 text-base leading-7 dark:text-slate-400">
+            <p>Register and verify up to 3 Passkeys or Security Keys.</p>
+            {(keyCount+1) > MAX_MFA_PER_USER ? <></> :
+              <>
+                <RegisterMFAModal onRegister={()=>incrementKeyCount()}/>
+              </>
+            }
+            {hasKeys ? 
+              <>
+                <VerifyMFAModal/>
+                <ShowKeyCount keycount={keyCount}/>
+                <RevokeAllKeysModal onRevoke={()=>clearKeyCount()}/>
+              </> : <></>
+            }
+          </div>
+          <div className="inline-flex items-center justify-center w-full">
+            <hr className="w-64 h-1 my-8 border-0 rounded bg-gray-700"/>
+            <div className="absolute px-4 -translate-x-1/2 left-1/2 ">
             </div>
-            <InfoBanner signOutRedirect={signOutRedirect}/>
-          </Modal>
-          <ToastContainer/>
-        </Frame>
-        <Footer/>
-      </Page>
+          </div>
+
+
+          <InfoBanner signOutRedirect={signOutRedirect}/>
+        </Modal>
+        <ToastContainer/>
+      </Frame>
+      <Footer/>
     </Web3Providers>
     </>
   )

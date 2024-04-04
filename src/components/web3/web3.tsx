@@ -21,11 +21,10 @@ export function ProfileBanner() {
     }
   }
   return(
-    <div className="flex mx-auto w-full p-5">
+    <div className="flex mx-auto w-full p-5 space-y-3">
       <div className="flex-col justify-center justify-items-center dark:text-slate-400" id="avatar" hidden={isConnected ? false : true} >
-        <Blockies seed={address ? address.toLowerCase(): ''} size={8} scale={4} className="rounded-lg shadow-xl"/>  
-        {address && <p className="text-yellow-500">{ensName ? `${ensName} (${sliceWallet(address)})` : sliceWallet(address)}</p>}
-        <p className="text-xs">Wallet Connected</p>
+        <Blockies seed={address ? address.toLowerCase(): ''} size={8} scale={3} className="rounded-lg shadow-xl"/>  
+        {address && <p className="text-xs text-yellow-500">{ensName ? `${ensName} (${sliceWallet(address)})` : sliceWallet(address)}</p>}
       </div>
     </div>
   )
