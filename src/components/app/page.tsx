@@ -52,7 +52,7 @@ export function FrameHeader({title}:{
           <h1 className="text-2xl text-yellow-500 p-5">{title}</h1>
         </div>
         <div className="">
-          <p className="text-2xl">🔐</p>
+          <p className="text-4xl">🔐</p>
         </div>
       </div>
   )
