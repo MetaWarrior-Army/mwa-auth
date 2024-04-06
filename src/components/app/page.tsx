@@ -47,7 +47,7 @@ export function FrameHeader({title}:{
   title?: string,
 }) {
   return (
-    <div className="flex w-full justify-between items-start p-3">
+    <div className="flex w-full justify-between items-center p-3">
         <div className="">
           <h1 className="text-2xl text-yellow-500 p-5">{title}</h1>
         </div>

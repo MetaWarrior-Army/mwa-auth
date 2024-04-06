@@ -55,7 +55,7 @@ export default function MfaPage() {
       <Frame>
 
         <Modal>
-          <FrameHeader title="Multi-Factor Authentication"/>
+          <FrameHeader title="Manage Security Keys"/>
 
           <div className="space-y-6 py-8 text-base leading-7 dark:text-slate-400">
             <p>Register and verify up to 3 Passkeys or Security Keys.</p>
