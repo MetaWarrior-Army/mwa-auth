@@ -50,8 +50,9 @@ export function Modal(props: { children: ReactNode }) {
 
 
 // Depends on being wrapped by Web3Providers
-export function FrameHeader({title}:{
+export function FrameHeader({title,icon}:{
   title?: string,
+  icon?: string,
 }) {
   return (
     <div className="flex w-full justify-between items-center p-3">
@@ -59,7 +60,7 @@ export function FrameHeader({title}:{
           <h1 className="text-2xl text-yellow-500 p-5">{title}</h1>
         </div>
         <div className="">
-          <p className="text-4xl">🔐</p>
+          <p className="text-4xl">{icon ? icon : '🔐'}</p>
         </div>
       </div>
   )

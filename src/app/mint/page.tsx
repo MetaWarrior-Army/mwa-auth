@@ -26,7 +26,7 @@ export default function MintPage() {
 
             {(!nftMinted && !nftUploaded) ?
               <>
-                <FrameHeader title="Mint Your Membership"/>
+                <FrameHeader title="Mint Your Membership" icon="📜"/>
                 <p className="text-base text-slate-400 mb-10">Mint your Membership and join MetaWarrior Army.</p>
               </> : (!nftMinted && nftUploaded) ?
                     <>
