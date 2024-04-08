@@ -2,8 +2,9 @@ import { ReactNode } from "react"
 import { APP_BASE_URL } from '@/utils/app/constants'
 import { ProfileBanner } from "../web3/web3"
 
-export function InfoBanner({signOutRedirect}:{
+export function InfoBanner({signOutRedirect, showProfileLink}:{
   signOutRedirect?:string,
+  showProfileLink?:boolean,
 }) {
   return (
     <>
@@ -12,6 +13,12 @@ export function InfoBanner({signOutRedirect}:{
         <ProfileBanner/>
       </div>
       <div>
+        {showProfileLink ? 
+          <>
+            <p><a href="/profile" className="text-yellow-500 hover:text-yellow-700">Profile &rarr;</a></p>
+          </> : <></>
+        }
+
         <p><a href="https://www.metawarrior.army" className="text-yellow-500 hover:text-yellow-700">MetaWarrior Army &rarr;</a></p>
         {signOutRedirect ? 
           <>
@@ -72,28 +79,26 @@ export function TinyDivider() {
 export function ServicesModal() {
   return (
     <>
-    <div className="mt-10">
-      <div className="">
-        <p className="text-base font-bold mb-5 mt-5 text-slate-400">Your Services:</p>
+      <div className="mx-auto max-w-full mt-10">
+        <p className="text-base font-bold text-slate-400">Your Services</p>
+        <div className="flex justify-between items-start w-full mt-5">
+          <div>
+            <p className="text-5xl"><a href="https://auth.metawarrior.army/mfa">🔐</a></p>
+          </div>
+          <div>
+            <p className="text-5xl"><a target="_blank" href="https://mail.metawarrior.army">✉️</a></p>
+          </div>
+          <div>
+            <p className="text-5xl"><a target="_blank" href="https://mastodon.metawarrior.army">📢</a></p>
+          </div>
+          <div>
+            <p className="text-5xl"><a target="_blank" href="https://matrix.metawarrior.army">💬</a></p>
+          </div>
+          <div>
+            <p className="text-5xl"><a target="_blank" href="https://discourse.metawarrior.army">📝</a></p>
+          </div>
+        </div>
       </div>
-      <div className="flex justify-between items-start w-full mt-5">
-        <div>
-          <p className="text-5xl"><a href="https://auth.metawarrior.army/mfa">🔐</a></p>
-        </div>
-        <div>
-          <p className="text-5xl"><a target="_blank" href="https://mail.metawarrior.army">✉️</a></p>
-        </div>
-        <div>
-          <p className="text-5xl"><a target="_blank" href="https://mastodon.metawarrior.army">📢</a></p>
-        </div>
-        <div>
-          <p className="text-5xl"><a target="_blank" href="https://matrix.metawarrior.army">💬</a></p>
-        </div>
-        <div>
-          <p className="text-5xl"><a target="_blank" href="https://discourse.metawarrior.army">📝</a></p>
-        </div>
-      </div>
-    </div>
     </>
   )
 }

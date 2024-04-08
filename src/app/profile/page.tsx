@@ -5,7 +5,7 @@ import Web3Providers  from '@/app/web3providers'
 import { Modal, FrameHeader, InfoBanner, TinyDivider, ServicesModal } from '@/components/app/page'
 import Cookies from 'js-cookie'
 import { APP_BASE_URL } from '@/utils/app/constants'
-import { ProfileModal } from '@/components/app/profile'
+import { ProfileModal, ThingsToDoModal } from '@/components/app/profile'
 
 export default function Profile() {
   const cookies = Cookies.get()
@@ -18,6 +18,7 @@ export default function Profile() {
         <Frame>
           <Modal>
             <FrameHeader title="Membership Profile"/>
+            <p className="text-base leading-7 text-slate-400 mb-10">Welcome</p>
 
             {cookies ?
               <>
@@ -27,10 +28,12 @@ export default function Profile() {
             }
               
             <ServicesModal/>
+            
+            <ThingsToDoModal/>
 
             <TinyDivider/>
 
-            <InfoBanner signOutRedirect={APP_BASE_URL+"/profile"}/>
+            <InfoBanner signOutRedirect={APP_BASE_URL+"/profile"} showProfileLink={false}/>
           </Modal>
         </Frame>
         <Footer/>

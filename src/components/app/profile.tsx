@@ -54,8 +54,78 @@ export function ProfileModal({nftCID, avatarCID, nftTx, nftId}:{
           <p className="text-base text-slate-400"><a href={'https://sepolia.etherscan.io/tx/'+nftTx} target="_blank"><u>Transaction</u></a></p>
           <p className="text-base text-slate-400">View on <a href={'https://testnets.opensea.io/assets/sepolia/'+NFT_CONTRACT_ADDRESS+'/'+nftId} target="_blank"><u>OpenSea</u></a></p>
         </div>
-      </> : <></>
+      </>
+      : 
+      <>
+        <div className="relative px-6 pt-10 pb-8 ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10 mt-5">
+          <div className="mx-auto max-w-md">
+            <span className="relative mx-auto flex h-3 w-3"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-500 opacity-75"></span></span>
+          </div>
+        </div>
+        <div>
+          <p className="text-slate-400 font-base">Loading NFT ⚙️</p>
+        </div>
+      </>
     }
+    </>
+  )
+}
+
+export function ThingsToDoModal(){
+  return (
+    <>
+      <div className="mx-auto max-w-full mt-10">
+        <p className="text-base text-slate-400 font-bold">Things to do:</p>
+        <div className="flex-col mx-auto justify-center mt-5 space-y-8">
+          <div></div>
+
+          <div className="flex mx-auto justify-between items-center">
+            <div className="flex-col mr-3">
+              <p className="text-2xl"><a href="/mfa" className="font-bold text-yellow-500 hover:text-yellow-300">🔐</a></p>
+            </div>
+            <div className="flex-col p-5">
+              <p className="text-base text-slate-400">Setup Multi-Factor Authentication (MFA) using passkeys or security keys.</p>
+            </div>
+          </div>
+
+          <div className="flex mx-auto justify-between items-center">
+            <div className="flex-col mr-3">
+              <p className="text-2xl"><a href="https://mail.metawarrior.army" target="_blank" className="font-bold text-yellow-500 hover:text-yellow-300">✉️</a></p>
+            </div>
+            <div className="flex-col p-5">
+              <p className="text-base text-slate-400">Login to your email to send and receive messages.</p>
+            </div>
+          </div>
+
+          <div className="flex mx-auto justify-between items-center">
+            <div className="flex-col mr-3">
+              <p className="text-2xl"><a href="https://mail.metawarrior.army" target="_blank" className="font-bold text-yellow-500 hover:text-yellow-300">📢</a></p>
+            </div>
+            <div className="flex-col p-5">
+              <p className="text-base text-slate-400">Join us on Mastodon, follow the news and explore federated social media.</p>
+            </div>
+          </div>
+          
+          <div className="flex mx-auto justify-between items-center">
+            <div className="flex-col mr-3">
+              <p className="text-2xl"><a href="https://matrix.metawarrior.army" target="_blank" className="font-bold text-yellow-500 hover:text-yellow-300">💬</a></p>
+            </div>
+            <div className="flex-col p-5">
+              <p className="text-base text-slate-400">Login to our Matrix space to chat with other members in realtime. Create your own rooms and explore federated chat.</p>
+            </div>
+          </div>
+
+          <div className="flex mx-auto justify-between items-center">
+            <div className="flex-col mr-3">
+              <p className="text-2xl"><a href="https://discourse.metawarrior.army" target="_blank" className="font-bold text-yellow-500 hover:text-yellow-300">📝</a></p>
+            </div>
+            <div className="flex-col p-5">
+              <p className="text-base text-slate-400">Read up on MetaWarrior Army and join the discussion. Excercise your voice as a member of the community!</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
     </>
   )
 }

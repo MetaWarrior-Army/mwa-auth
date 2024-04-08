@@ -79,7 +79,7 @@ export default function MfaPage() {
           </div>
 
 
-          <InfoBanner signOutRedirect={signOutRedirect}/>
+          <InfoBanner signOutRedirect={signOutRedirect} showProfileLink={true}/>
         </Modal>
         <ToastContainer/>
       </Frame>
