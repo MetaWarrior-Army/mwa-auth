@@ -1,11 +1,12 @@
-import { useAccount } from 'wagmi'
+import { useAccount, useSwitchChain } from 'wagmi'
 import { ConnectWalletModal } from '../web3/web3'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { screenUsername } from './utils/screenusername'
 import { APP_BASE_URL, PINATA_GATEWAY_URL } from '@/utils/app/constants'
 import Image from 'next/image'
 import { MintNFTModal } from './mintNFT'
 import { toasterNotify } from '@/utils/toast/toaster'
+import { sepolia } from 'viem/chains'
 
 type Username = {
   value: string,
@@ -25,7 +26,9 @@ export function BuildNFTModal({userWallet,nftMinted,nftUploaded}:{
   const [nftLevel,setNftLevel] = useState('')
   const [nftOp,setNftOp] = useState('')
   const [nftSign,setNftSign] = useState('')
-  const { address, isConnected } = useAccount()
+  const [wrongChain,setWrongChain] = useState(true)
+  const { address, isConnected, chain } = useAccount()
+  const { switchChain } = useSwitchChain()
   
   
   // Build NFT 
@@ -89,6 +92,17 @@ export function BuildNFTModal({userWallet,nftMinted,nftUploaded}:{
       setTOS(false)
     }
   }
+
+  useEffect(()=>{
+    if(chain?.id !== sepolia.id) {
+      setWrongChain(true)
+      console.log('Wrong chain connected')
+    }
+    else{
+      setWrongChain(false)
+      console.log('Right chain connected')
+    }
+  },[setWrongChain,chain,sepolia])
 
   // Return page
   return (
@@ -170,10 +184,23 @@ export function BuildNFTModal({userWallet,nftMinted,nftUploaded}:{
     }
 
 
-    {(isConnected && userWallet == address && !buildingNFT && nftCID !== '') ?
+    {(!wrongChain && isConnected && userWallet == address && !buildingNFT && nftCID !== '') ?
       <>
         <MintNFTModal tokenUri={'ipfs://'+nftCID} address={address as string} onMint={()=>nftMinted()}/>
-      </> : <></>
+      </> : (wrongChain && isConnected && userWallet == address && !buildingNFT && nftCID !=='') ? 
+            <>
+            <div className="mt-5">
+              <p className="text-base text-slate-400">Your wallet is connected to the wrong network.</p>
+              <div className="mt-5 mb-5">
+                <button hidden={false}
+                  onClick={()=>switchChain({chainId: sepolia.id})}
+                  id="buildButton"
+                  disabled={(!tos || !validUsername)}
+                  className="bg-slate-950 p-2 text-yellow-500 font-bold rounded-lg w-full shadow-xl border-solid border-2 hover:border-dotted border-yellow-500"
+                  >Switch Network</button>
+              </div>
+            </div>
+            </> : <></>
     }
     
 

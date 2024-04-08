@@ -78,7 +78,7 @@ export function ServicesModal() {
       </div>
       <div className="flex justify-between items-start w-full mt-5">
         <div>
-          <p className="text-5xl"><a target="_blank" href="https://auth.metawarrior.army/mfa">🔐</a></p>
+          <p className="text-5xl"><a href="https://auth.metawarrior.army/mfa">🔐</a></p>
         </div>
         <div>
           <p className="text-5xl"><a target="_blank" href="https://mail.metawarrior.army">✉️</a></p>

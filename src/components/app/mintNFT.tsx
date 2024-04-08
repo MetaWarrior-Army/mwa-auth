@@ -2,7 +2,7 @@ import { APP_BASE_URL, NFT_CONTRACT_ADDRESS } from '@/utils/app/constants'
 import { contractAbi } from '@/utils/app/nft/abi'
 import { useEffect, useState } from 'react'
 import { Address, parseEther } from 'viem'
-import {useWriteContract,useSimulateContract, useWaitForTransactionReceipt } from 'wagmi'
+import { useWriteContract, useSimulateContract, useWaitForTransactionReceipt } from 'wagmi'
 
 export function MintNFTModal({tokenUri,address,onMint}:{
   tokenUri: string,
@@ -74,6 +74,8 @@ export function MintNFTModal({tokenUri,address,onMint}:{
   
   useEffect(()=>{
     // Confirm Tx Server Side and activate user account
+    console.log('tokenUri: '+tokenUri)
+    console.log('address: '+address)
     if(isConfirmed && !txConfirmed){
       confirmTx()
     }
@@ -119,7 +121,7 @@ export function MintNFTModal({tokenUri,address,onMint}:{
             <span className="relative mx-auto flex h-3 w-3"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-500 opacity-75"></span></span>
           </div>
           <div>
-            <p className="font-base text-slate-400">Waiting for transaction 🔎</p>
+            <p className="font-base text-slate-400">Waiting for transaction. Do not browse away from this page 🔎</p>
           </div>
         </div>
       </> : <></>
@@ -131,7 +133,7 @@ export function MintNFTModal({tokenUri,address,onMint}:{
             <span className="relative mx-auto flex h-3 w-3"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-500 opacity-75"></span></span>
           </div>
           <div>
-            <p className="font-base text-slate-400 font-base">Verifying transaction 🧾</p>
+            <p className="font-base text-slate-400 font-base">Verifying transaction. Do not browse away from this page 🧾</p>
           </div>
         </div>
       </> : <></>
@@ -166,7 +168,10 @@ export function MintNFTModal({tokenUri,address,onMint}:{
             >Mint NFT</button>
         </div>
       </> : <></>
-  
+    }
+
+    {
+      
     }
     
 
