@@ -58,3 +58,43 @@ export function FrameHeader({title}:{
   )
 }
 
+// simple hr
+export function TinyDivider() {
+  return (
+    <div className="inline-flex items-center justify-center w-full mt-10">
+      <hr className="w-64 h-1 my-8 border-0 rounded bg-gray-700"/>
+      <div className="absolute px-4 -translate-x-1/2 left-1/2 ">
+      </div>
+    </div>
+  )
+}
+
+export function ServicesModal() {
+  return (
+    <>
+    <div className="mt-10">
+      <div className="">
+        <p className="text-base font-bold mb-5 mt-5 text-slate-400">Your Services:</p>
+      </div>
+      <div className="flex justify-between items-start w-full mt-5">
+        <div>
+          <p className="text-5xl"><a target="_blank" href="https://auth.metawarrior.army/mfa">🔐</a></p>
+        </div>
+        <div>
+          <p className="text-5xl"><a target="_blank" href="https://mail.metawarrior.army">✉️</a></p>
+        </div>
+        <div>
+          <p className="text-5xl"><a target="_blank" href="https://mastodon.metawarrior.army">📢</a></p>
+        </div>
+        <div>
+          <p className="text-5xl"><a target="_blank" href="https://matrix.metawarrior.army">💬</a></p>
+        </div>
+        <div>
+          <p className="text-5xl"><a target="_blank" href="https://discourse.metawarrior.army">📝</a></p>
+        </div>
+      </div>
+    </div>
+    </>
+  )
+}
+

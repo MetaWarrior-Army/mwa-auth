@@ -9,6 +9,12 @@ module.exports = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: "violet-tremendous-rhinoceros-811.mypinata.cloud", // Pinata IPFS Domain Gateway
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 }

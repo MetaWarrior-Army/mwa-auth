@@ -9,10 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@download/blockies": "^1.0.3",
+    "@pinata/sdk": "^2.1.0",
     "@simplewebauthn/browser": "^9.0.1",
     "@simplewebauthn/server": "^9.0.3",
     "@simplewebauthn/types": "^9.0.1",
     "@tanstack/react-query": "^5.28.9",
+    "canvas": "^2.11.2",
+    "fs": "^0.0.1-security",
     "js-cookie": "^3.0.5",
     "next": "14.1.4",
     "next-auth": "^4.24.7",
@@ -33,6 +37,7 @@
     "@types/react": "^18",
     "@types/react-blockies": "^1.4.4",
     "@types/react-dom": "^18",
+    "@types/react-toastify": "^4.1.0",
     "autoprefixer": "^10.0.1",
     "encoding": "^0.1.13",
     "eslint": "^8",

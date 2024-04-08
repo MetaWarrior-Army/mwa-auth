@@ -1,9 +1,12 @@
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
+import { getToken } from 'next-auth/jwt'
 import { loginMiddleware } from '@/utils/middleware/login'
 import { consentMiddleware } from '@/utils/middleware/consent'
 import { logoutMiddleware } from '@/utils/middleware/logout'
 import { mfaVerifyMiddleware } from '@/utils/middleware/mfaVerify'
 import { mfaMiddleware } from '@/utils/middleware/mfa'
+import { profileMiddleware } from '@/utils/middleware/profile'
+import { mintMiddleware } from '@/utils/middleware/mint'
 
 // Middleware
 export default async function middleware(req: NextRequest) {
@@ -34,6 +37,22 @@ export default async function middleware(req: NextRequest) {
   else if (req.nextUrl.pathname.startsWith('/mfa')) {
     return mfaMiddleware(req)
   }
+
+  // Middleware for /profil
+  else if (req.nextUrl.pathname.startsWith('/profile')) {
+    return profileMiddleware(req)
+  }
+
+  else if (req.nextUrl.pathname.startsWith('/mint')) {
+    return mintMiddleware(req)
+  }
+
+  else if (req.nextUrl.pathname.startsWith('/')) {
+    // Check if logged in, send to /profile
+    const token = getToken({req})
+    if(!token) return NextResponse.redirect(new URL('/login',req.url))
+    return NextResponse.redirect(new URL('/profile',req.url))
+  }
 }
 
 
@@ -46,6 +65,8 @@ export const config = {
      * - logout
      * - mfa
      * - mfa/verified
+     * - profile
+     * - /
      * NOT:
      * - api (API routes)
      * - _next
@@ -54,7 +75,7 @@ export const config = {
      * - favicon.ico (favicon file)
      */
     {
-      source: '/((?!api|_next|_next\/static|_next\/image|favicon.ico))(login|consent|logout|mfa|mfa\/verify)',
+      source: '/((?!api|_next|_next\/static|_next\/image|favicon.ico))(login|consent|logout|mfa|mfa\/verify|profile|mint|)',
       missing: [
         { type: 'header', key: 'next-router-prefetch' },
         { type: 'header', key: 'purpose', value: 'prefetch' },
