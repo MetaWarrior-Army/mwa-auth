@@ -34,6 +34,16 @@ We use Wagmi/Viem for interacting with user's wallets. We attempt to provide the
 
 ## Screenshots
 
-![connect wallet](https://github.com/MetaWarrior-Army/mwa-auth/blob/main/docs/images/mwa-auth-scrot1.png?raw=true)
-![login](https://github.com/MetaWarrior-Army/mwa-auth/blob/main/docs/images/mwa-auth-scrot2.png?raw=true)
+![connect wallet](https://github.com/MetaWarrior-Army/mwa-auth/blob/d8ab3f7cca371ecce786ef1a7fe2837d76c002d4/docs/images/mwa-auth-01.png)
+
+![login](https://github.com/MetaWarrior-Army/mwa-auth/blob/d8ab3f7cca371ecce786ef1a7fe2837d76c002d4/docs/images/mwa-auth-02.png)
+
+![MFA](https://github.com/MetaWarrior-Army/mwa-auth/blob/d8ab3f7cca371ecce786ef1a7fe2837d76c002d4/docs/images/mwa-auth-03.png)
+
+![mint1](https://github.com/MetaWarrior-Army/mwa-auth/blob/d8ab3f7cca371ecce786ef1a7fe2837d76c002d4/docs/images/mwa-auth-04.png)
+
+![mint2](https://github.com/MetaWarrior-Army/mwa-auth/blob/d8ab3f7cca371ecce786ef1a7fe2837d76c002d4/docs/images/mwa-auth-05.png)
+
+![mint3](https://github.com/MetaWarrior-Army/mwa-auth/blob/d8ab3f7cca371ecce786ef1a7fe2837d76c002d4/docs/images/mwa-auth-06.png)
+
 ![consent](https://github.com/MetaWarrior-Army/mwa-auth/blob/main/docs/images/mwa-auth-scrot3.png?raw=true)
