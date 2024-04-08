@@ -2,7 +2,7 @@
 
 Account creation, authentication, and Multi-Factor Authentication for MetaWarrior Army. 
 
-Accounts are authenticated by assigning a message with their web3 wallets and MFA is provided via WebAuthn supported Passkeys and Security Keys.
+Accounts are authenticated by signing a message with their web3 wallets and MFA is provided via WebAuthn supported Passkeys and Security Keys.
 
 Accounts are created by minting and [NFT](https://github.com/metawarrior-army/mwa-nft) on an EVM compatible blockchain. NFT images are Blockies generated off the account wallet address. NFT image and metadata is stored in Pinata IPFS cloud.
 
