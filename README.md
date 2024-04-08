@@ -1,6 +1,12 @@
 # MWA-Auth
 
-A Custom UI for authenticating with an OAuth2/OpenID server providing a Web3 authentication mechanism for the rest of Web2.
+Account creation, authentication, and Multi-Factor Authentication for MetaWarrior Army. 
+
+Accounts are authenticated by assigning a message with their web3 wallets and MFA is provided via WebAuthn supported Passkeys and Security Keys.
+
+Accounts are created by minting and [NFT](https://github.com/metawarrior-army/mwa-nft) on an EVM compatible blockchain. NFT images are Blockies generated off the account wallet address. NFT image and metadata is stored in Pinata IPFS cloud.
+
+Account authentication is backed by an OAuth2 server providing account access to a variety of products and services offered by MetaWarrior Army.
 
 ## Dependencies
 
@@ -9,12 +15,13 @@ A Custom UI for authenticating with an OAuth2/OpenID server providing a Web3 aut
 - Next-Auth
 - Wagmi/Viem
 - Sign In With Ethereum
+- Pinata IPFS Cloud account
 - Ory Hydra OAuth Server
 - PostgreSQL Database of Users
 
 ### Honorable Mentions
 
-- `react-blockies` for user profile images
+- `react-blockies` and `@download/blockies` for user profile images
 - `js-cookie` for the help client side
 
 ## Notes:
