@@ -26,7 +26,7 @@ Account authentication is backed by an OAuth2 server providing account access to
 
 ## Notes:
 
-This serves as the custom UI for an OAuth2/OpenID Identity Provider. As such, not all OAuth implementations are created equal. Ory Hydra has it's quirks, but if you follow best practices and the `.well-known/openid-configuration` you'll be fine. 
+This app acts as the custom UI for an OAuth2/OpenID Identity Provider. As such, not all OAuth implementations are created equal. Ory Hydra has it's quirks, but if you follow best practices and the `.well-known/openid-configuration` you'll be fine. 
 
 There's a special API endpoint called `imapGrant` created for older clients of the OpenID `/userinfo` endpoint where the `access_token` is sent as parameters in a GET request instead of POSTing the token in the HTTP Authorization headers. Our custom endpoint serves as a relay for an Dovecot IMAP server that needs a little help. The only purpose of the `PGSQL_MAIL_` variables are for this endpoint.
 
