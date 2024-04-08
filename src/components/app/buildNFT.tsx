@@ -102,7 +102,7 @@ export function BuildNFTModal({userWallet,nftMinted,nftUploaded}:{
       setWrongChain(false)
       console.log('Right chain connected')
     }
-  },[setWrongChain,chain,sepolia])
+  },[setWrongChain,chain])
 
   // Return page
   return (

@@ -84,7 +84,7 @@ export function MintNFTModal({tokenUri,address,onMint}:{
       activateAccount()
     }
 
-  },[isConfirmed,txConfirmed,accountActivated,confirmTx,activateAccount])
+  },[isConfirmed,txConfirmed,accountActivated,confirmTx,activateAccount,address,tokenUri])
 
   return (
     <>
@@ -171,7 +171,7 @@ export function MintNFTModal({tokenUri,address,onMint}:{
     }
 
     {
-      
+
     }
     
 
