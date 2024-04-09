@@ -29,6 +29,7 @@ export function BuildNFTModal({userWallet,nftMinted,nftUploaded,username,svdAvat
   const [nftLevel,setNftLevel] = useState('')
   const [nftOp,setNftOp] = useState('')
   const [nftSign,setNftSign] = useState('')
+  const [minting,setMinting] = useState(false)
   const [minted,setMinted] = useState(false)
   const [wrongChain,setWrongChain] = useState(true)
   const { address, isConnected, chain } = useAccount()
@@ -36,35 +37,41 @@ export function BuildNFTModal({userWallet,nftMinted,nftUploaded,username,svdAvat
 
   // Build NFT 
   async function build(){
-    setBuildingNFT(true)
-    console.log('build()')
-    // Get Username
-    const username = document.getElementById('usernameInput') as unknown as Username
-    if(!username) throw Error('Failed to capture username')
-    // Build NFT
-    const buildReq = await fetch(APP_BASE_URL+'/api/nft/build',{
-      method: 'POST',
-      headers: {'Content-type':'application/json'},
-      body: JSON.stringify({id:btoa(address as string),msg:btoa(username.value.toLowerCase())})
-    })
-    const build = await buildReq.json()
-    // Update UI
-    if(build.nft_cid){
-      nftUploaded()
-      setBuildingNFT(false)
-      toasterNotify({message:'NFT Ready',type:'success'})
-      // Get NFT Meta
-      setNFTCID(build.nft_cid)
-      setAvatarCID(build.avatar_cid)
-      const fetchNFT = await fetch(PINATA_GATEWAY_URL+'/ipfs/'+build.nft_cid)
-      const nftMeta = await fetchNFT.json()
-      console.log(nftMeta)
-      setNftName(nftMeta.name)
-      setNftLevel(nftMeta.attributes[3].value)
-      setNftOp(nftMeta.attributes[2].value)
-      setNftSign(nftMeta.attributes[4].value)
+    try{
+      setBuildingNFT(true)
+      console.log('build()')
+      // Get Username
+      const username = document.getElementById('usernameInput') as unknown as Username
+      if(!username) throw Error('Failed to capture username')
+      // Build NFT
+      const buildReq = await fetch(APP_BASE_URL+'/api/nft/build',{
+        method: 'POST',
+        headers: {'Content-type':'application/json'},
+        body: JSON.stringify({id:btoa(address as string),msg:btoa(username.value.toLowerCase())})
+      })
+      const build = await buildReq.json()
+      // Update UI
+      if(build.nft_cid){
+        nftUploaded()
+        setBuildingNFT(false)
+        toasterNotify({message:'NFT Ready',type:'success'})
+        // Get NFT Meta
+        setNFTCID(build.nft_cid)
+        setAvatarCID(build.avatar_cid)
+        const fetchNFT = await fetch(PINATA_GATEWAY_URL+'/ipfs/'+build.nft_cid)
+        const nftMeta = await fetchNFT.json()
+        console.log(nftMeta)
+        setNftName(nftMeta.name)
+        setNftLevel(nftMeta.attributes[3].value)
+        setNftOp(nftMeta.attributes[2].value)
+        setNftSign(nftMeta.attributes[4].value)
+      }
+      return true
+
+    } catch(e: any) {
+      toasterNotify({message:e.message,type:'error'})
     }
-    return true
+    
   }
 
   // Screen usernames
@@ -205,7 +212,15 @@ export function BuildNFTModal({userWallet,nftMinted,nftUploaded,username,svdAvat
 
     {(!wrongChain && isConnected && userWallet == address && !buildingNFT && nftCID !== '') ?
       <>
-        <MintNFTModal tokenUri={'ipfs://'+nftCID} address={address as string} onMint={()=>nftMinted()} minted={()=>setMinted(true)}/>
+        <MintNFTModal 
+          tokenUri={'ipfs://'+nftCID} 
+          address={address as string} 
+          onMint={()=>nftMinted()} 
+          minted={()=>{
+            setMinting(false)
+            setMinted(true)
+          }}
+          minting={()=>setMinting(true)}/>
       </> : (wrongChain && isConnected && userWallet == address && !buildingNFT && nftCID !=='') ? 
             <>
             <div className="mt-5">
@@ -229,7 +244,7 @@ export function BuildNFTModal({userWallet,nftMinted,nftUploaded,username,svdAvat
       </> : <></>
     }
 
-    { (buildingNFT || minted) ? <></> :
+    { (buildingNFT || minting || minted) ? <></> :
       <>
         <ConnectWalletModal showDisconnect={true}/>
       </>

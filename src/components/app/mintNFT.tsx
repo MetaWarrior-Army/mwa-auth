@@ -1,14 +1,16 @@
 import { APP_BASE_URL, NFT_CONTRACT_ADDRESS } from '@/utils/app/constants'
 import { contractAbi } from '@/utils/app/nft/abi'
+import { toasterNotify } from '@/utils/app/toaster'
 import { useEffect, useState } from 'react'
 import { Address, parseEther } from 'viem'
 import { useWriteContract, useSimulateContract, useWaitForTransactionReceipt } from 'wagmi'
 
-export function MintNFTModal({tokenUri,address,onMint,minted}:{
+export function MintNFTModal({tokenUri,address,onMint,minted,minting}:{
   tokenUri: string,
   address: string,
   onMint: any,
   minted: any,
+  minting: any,
 }) {
   const [mintFinished,setMintFinished] = useState(false)
   const [txConfirming,setTxConfirming] = useState(false)
@@ -44,40 +46,53 @@ export function MintNFTModal({tokenUri,address,onMint,minted}:{
     setAccountActivating(false)
     minted()
     onMint()
+    toasterNotify({message:'Account Activated!',type:'success'})
+    
   }
 
   // Confirm TX
   async function confirmTx(){
-    setTxConfirming(true)
-    if(!WaitForTransactionReceiptData) throw Error('Now Tx Receipt')
+    try{
+      setTxConfirming(true)
+      if(!WaitForTransactionReceiptData) throw Error('Now Tx Receipt')
+      
+      // Encode parameters
+      const id = btoa(address)
+      const msg = btoa(WaitForTransactionReceiptData.transactionHash)
+      const num = parseInt(WaitForTransactionReceiptData.logs[0].topics[3] as string,16)
+      
+      // Verify transaction 
+      const confirmReq = await fetch(APP_BASE_URL+'/api/nft/verifytx',{
+        method: 'POST',
+        headers: {'Content-type':'application/json'},
+        body: JSON.stringify({id,msg,num})
+      })
+      const res = await confirmReq.json()
+      if(!res) throw Error('Failed to verify transaction.')
+      if(!res.verified) throw Error('Failed to verify transaction')
+      console.log('Got activation session: '+res.session)
+      // Update UI
+      console.log('Transaction verified')
+      setActivateSession(res.session)
+      setTxConfirmed(true)
+      setTxConfirming(false)
+      setMintFinished(true)
+
+    } catch(e: any) {
+      toasterNotify({message:e.message,type:'error'})
+    }
     
-    // Encode parameters
-    const id = btoa(address)
-    const msg = btoa(WaitForTransactionReceiptData.transactionHash)
-    const num = parseInt(WaitForTransactionReceiptData.logs[0].topics[3] as string,16)
-    
-    // Verify transaction 
-    const confirmReq = await fetch(APP_BASE_URL+'/api/nft/verifytx',{
-      method: 'POST',
-      headers: {'Content-type':'application/json'},
-      body: JSON.stringify({id,msg,num})
-    })
-    const res = await confirmReq.json()
-    if(!res) throw Error('Failed to verify transaction.')
-    if(!res.verified) throw Error('Failed to verify transaction')
-    console.log('Got activation session: '+res.session)
-    // Update UI
-    console.log('Transaction verified')
-    setActivateSession(res.session)
-    setTxConfirmed(true)
-    setTxConfirming(false)
-    setMintFinished(true)
   }
   
   useEffect(()=>{
     // Confirm Tx Server Side and activate user account
     console.log('tokenUri: '+tokenUri)
     console.log('address: '+address)
+
+    if(isConfirming){
+      minting()
+    }
+
     if(isConfirmed && !txConfirmed){
       confirmTx()
     }
