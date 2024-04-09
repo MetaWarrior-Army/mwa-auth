@@ -10,7 +10,9 @@ import { MwaUser } from '@/utils/app/types'
 // CREATE MFA CREDENTIAL 
 export async function createMfaCredential(cred: MfaCredential) {
   // Encode transports,credId,publicKey for database
-  const transports = JSON.stringify(cred.transports)
+  let transports
+  if(!cred.transports) transports = JSON.stringify(['undefined'])
+  else transports = JSON.stringify(cred.transports)
   const credId = Buffer.from(cred.credentialID).toString('base64url')
   const publicKey = Buffer.copyBytesFrom(cred.credentialPublicKey).toString('hex')
   // INSERT into database
@@ -31,7 +33,10 @@ export async function getMfaCredentials(address: string) {
   let credentials: Array<MfaCredential> = []
   getCredRes.rows.forEach((cred) => {
     // Decode transports, credId, and publicKey from database
-    const transports = JSON.parse(cred.transports)
+    
+    let transports
+    if(!cred.transports) transports = ['undefined']
+    else transports = JSON.parse(cred.transports)
     const credId = new Uint8Array(Buffer.from(cred.cred_id, 'base64url'))
     const publicKey = new Uint8Array(Buffer.from(cred.cred_pkey,'hex'))
     // Build credential
@@ -58,7 +63,10 @@ export async function getMfaCredential(address: string, id: string) {
   if(getCredRes.rowCount == 0) return undefined
   const cred = getCredRes.rows[0]
   // Decode transports, credId, and publicKey from database
-  const transports = JSON.parse(cred.transports)
+
+  let transports
+  if(!cred.transports) transports = ['undefined']
+  else transports = JSON.parse(cred.transports)  
   const credId = new Uint8Array(Buffer.from(cred.cred_id, 'base64url'))
   const publicKey = new Uint8Array(Buffer.from(cred.cred_pkey,'hex'))
   // Build credential
