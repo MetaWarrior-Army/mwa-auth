@@ -7,6 +7,8 @@ import { generateAvatar } from '@/utils/app/nft/avatar'
 import { generateNftJson } from '@/utils/app/nft/json'
 import { getMwaUser, updateMwaUsername } from '@/utils/app/db/utils'
 import { MwaUser, AppSessionToken } from '@/utils/app/types'
+import { APP_BASE_URL, PRIVATE_API_KEY } from '@/utils/app/constants'
+import { sha512 } from '@/utils/app/sha512'
 
 
 export async function POST(req: NextRequest) {
@@ -26,6 +28,16 @@ export async function POST(req: NextRequest) {
 
   // Validate session
   if(address !== token.id) return NextResponse.json({error:'Session mismatch'})
+
+  // Check username
+  const SECRET_HASH = await sha512(PRIVATE_API_KEY)
+  const usernameCheck = await fetch(APP_BASE_URL+'/api/user/checkusername',{
+    method:'POST',
+    headers: {'Content-type':'application/json'},
+    body: JSON.stringify({secret: SECRET_HASH, username: username})
+  })
+  const userCheck = await usernameCheck.json()
+  if(!userCheck.valid) return NextResponse.json({error:'Invalid username',status:500})
 
   // Verify user
   const user = await getMwaUser(token.id) as MwaUser

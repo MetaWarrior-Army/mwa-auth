@@ -11,34 +11,27 @@ export async function POST(req: NextRequest) {
   // Get token
   const token = await getToken({req}) as AppSessionToken
   if(!token) return NextResponse.json({error:'No Session',status:500})
-  console.log('Got token')
 
   // Get parameters
   const { id, msg } = await req.json()
-  console.log('Got parameters')
 
   // Decode parameters
   const address = atob(id)
   const session = atob(msg)
-  console.log('Decoded parameters')
 
   // Validate Token
   if(token.id !== address) return NextResponse.json({error:'Invalid token',status:500})
-  console.log('Validated token')
 
   // Get user
   const user = await getMwaUser(address) as MwaUser
   if(!user) return NextResponse.json({error:'Failed to get user',status:500})
-  console.log('Validated User')
 
   // Validate Session
   const validSession = await validateMfaSession(address,session)
   if(!validSession) return NextResponse.json({error:'Invalid session',status:500})
-  console.log('Validated session')
 
   // Right now this sets email_active in user row, effectively enabling their account across all protected OAuth Clients
   // Create Mailbox
-  console.log('Creating mailbox')
   const createMB = await fetch(MAILSERVER_API_URL+'/create_mailbox.php', {
     method: 'POST',
     headers: {'Content-type': 'application/json',},
