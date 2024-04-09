@@ -90,16 +90,52 @@ export function MintNFTModal({tokenUri,address,onMint}:{
     <>
     {(!simData && !simError) ? 
       <>
-        <div className="flex w-full justify-between mt-5 mb-3">
+        <div className="flex w-full justify-between items-center mt-5 mb-3">
           <div>
             <span className="relative mx-auto flex h-3 w-3"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-500 opacity-75"></span></span>
           </div>
-          <div>
+          <div className="p-5">
             <p className="font-base text-slate-400">Preparing your wallet 🧾</p>
           </div>
         </div>
       </> : <></>
 
+    }
+    {isConfirming ? 
+      <>
+        <div className="flex w-full justify-between items-center mt-5 mb-3">
+          <div>
+            <span className="relative mx-auto flex h-3 w-3"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-500 opacity-75"></span></span>
+          </div>
+          <div className="p-5">
+            <p className="font-base text-slate-400">Waiting for transaction. Do not browse away from this page 🔎</p>
+          </div>
+        </div>
+      </> : <></>
+    }
+    {txConfirming ? 
+      <>
+        <div className="flex w-full justify-between items-center mt-5 mb-3">
+          <div>
+            <span className="relative mx-auto flex h-3 w-3"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-500 opacity-75"></span></span>
+          </div>
+          <div className="p-5">
+            <p className="font-base text-slate-400 font-base">Verifying transaction. Do not browse away from this page 🧾</p>
+          </div>
+        </div>
+      </> : <></>
+    }
+    {accountActivating ?
+      <>
+        <div className="flex w-full justify-between items-center mt-5 mb-3">
+          <div>
+            <span className="relative mx-auto flex h-3 w-3"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-500 opacity-75"></span></span>
+          </div>
+          <div className="p-5">
+            <p className="font-base text-slate-400 font-base">Activating account ⚙️</p>
+          </div>
+        </div>
+      </> : <></>
     }
     {simError ? 
       <>
@@ -110,42 +146,6 @@ export function MintNFTModal({tokenUri,address,onMint}:{
           </div>
           <div>
             <article className="text-xs font-base text-orange-500 text-wrap">{simError.message.toString()}</article>
-          </div>
-        </div>
-      </> : <></>
-    }
-    {isConfirming ? 
-      <>
-        <div className="flex w-full justify-between mt-5 mb-3">
-          <div>
-            <span className="relative mx-auto flex h-3 w-3"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-500 opacity-75"></span></span>
-          </div>
-          <div>
-            <p className="font-base text-slate-400">Waiting for transaction. Do not browse away from this page 🔎</p>
-          </div>
-        </div>
-      </> : <></>
-    }
-    {txConfirming ? 
-      <>
-        <div className="flex w-full justify-between mt-5 mb-3">
-          <div>
-            <span className="relative mx-auto flex h-3 w-3"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-500 opacity-75"></span></span>
-          </div>
-          <div>
-            <p className="font-base text-slate-400 font-base">Verifying transaction. Do not browse away from this page 🧾</p>
-          </div>
-        </div>
-      </> : <></>
-    }
-    {accountActivating ?
-      <>
-        <div className="flex w-full justify-between mt-5 mb-3">
-          <div>
-            <span className="relative mx-auto flex h-3 w-3"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-500 opacity-75"></span></span>
-          </div>
-          <div>
-            <p className="font-base text-slate-400 font-base">Activating account ⚙️</p>
           </div>
         </div>
       </> : <></>
