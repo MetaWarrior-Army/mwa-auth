@@ -29,6 +29,11 @@ export async function mintMiddleware(req: NextRequest) {
     resp.cookies.set('nft_avatar_cid',user.nft_0_avatar_cid)
     resp.cookies.set('nft_cid',user.nft_0_cid)
   }
+  else{
+    resp.cookies.delete('username')
+    resp.cookies.delete('nft_avatar_cid')
+    resp.cookies.delete('nft_cid')
+  }
   resp.cookies.set('address',token.id)
 
   // Return

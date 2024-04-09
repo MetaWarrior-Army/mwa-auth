@@ -14,14 +14,12 @@ export async function POST(req: NextRequest) {
   const { secret, address } = await req.json()
   if(secret !== SECRET_HASH) return NextResponse.json({error:'Unauthorized',status:500})
   if(!address) return NextResponse.json({error:'Invalid parameters',status:500})
-  // Get user
+  // Get/Validate user
   const user = await getMwaUser(address) as MwaUser
   if(!user) return NextResponse.json({error:'Failed to get user',status:500})
   if(user.email_active) return NextResponse.json({error:'User is active',status:500})
   if(user.nft_0_tx) return NextResponse.json({error:'User has minted',status:500})
   if(!user.nft_0_avatar_cid) return NextResponse.json({error:'User has no recorded CID',status:500})
-  console.log('Got user')
-  console.log(user)
 
   // Delete user information and ideally Pinata IPFS content
   // Unpin from IPFS

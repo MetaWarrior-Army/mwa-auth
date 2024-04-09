@@ -6,7 +6,7 @@ import { PRIVATE_API_KEY } from '@/utils/app/constants'
 // PRIVATE API ENDPOINT
 // Only accept POST
 export async function POST(req: NextRequest) {
-  console.log('getMwaUser: ')
+  console.log('/api/user/getMwaUser: ')
   const SECRET_HASH = await sha512(PRIVATE_API_KEY)
   const { secret, address } = await req.json()
   if(secret !== SECRET_HASH) return NextResponse.json({error:'Unauthorized',status:500})

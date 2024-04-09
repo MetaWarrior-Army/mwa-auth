@@ -70,8 +70,6 @@ export async function unpinCID(CID:string) {
   const pinata = await new pinataSDK({ pinataJWTKey: PINATA_JWT})
   // unpin
   const res = await pinata.unpin(CID)
-  console.log('Unpin result:')
-  console.log(res)
   if(res !== 'OK') return undefined
   return true
 }
