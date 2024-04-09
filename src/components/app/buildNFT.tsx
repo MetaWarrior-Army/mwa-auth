@@ -12,10 +12,13 @@ type Username = {
   value: string,
 }
 
-export function BuildNFTModal({userWallet,nftMinted,nftUploaded}:{
+export function BuildNFTModal({userWallet,nftMinted,nftUploaded,username,svdAvatarCID,svdNftCID}:{
   userWallet: string,
   nftMinted: any,
   nftUploaded: any,
+  username?: string,
+  svdAvatarCID?: string,
+  svdNftCID?: string,
 }){
   const [tos,setTOS] = useState(false)
   const [validUsername,setValidUsername] = useState(false)
@@ -26,11 +29,11 @@ export function BuildNFTModal({userWallet,nftMinted,nftUploaded}:{
   const [nftLevel,setNftLevel] = useState('')
   const [nftOp,setNftOp] = useState('')
   const [nftSign,setNftSign] = useState('')
+  const [minted,setMinted] = useState(false)
   const [wrongChain,setWrongChain] = useState(true)
   const { address, isConnected, chain } = useAccount()
   const { switchChain } = useSwitchChain()
-  
-  
+
   // Build NFT 
   async function build(){
     setBuildingNFT(true)
@@ -93,7 +96,23 @@ export function BuildNFTModal({userWallet,nftMinted,nftUploaded}:{
     }
   }
 
+  
+
   useEffect(()=>{
+    async function getNFT(){
+      setNftName(username as string)
+      setNFTCID(svdNftCID as string)
+      setAvatarCID(svdAvatarCID as string)
+      const nftReq = await fetch(PINATA_GATEWAY_URL+'/ipfs/'+svdNftCID)
+      const nftMeta = await nftReq.json()
+      setNftLevel(nftMeta.attributes[3].value)
+      setNftSign(nftMeta.attributes[4].value)
+      setNftOp(nftMeta.attributes[2].value)
+    }
+    if(username && svdAvatarCID && svdNftCID){
+      getNFT()
+    }
+
     if(chain?.id !== sepolia.id) {
       setWrongChain(true)
       console.log('Wrong chain connected')
@@ -102,7 +121,7 @@ export function BuildNFTModal({userWallet,nftMinted,nftUploaded}:{
       setWrongChain(false)
       console.log('Right chain connected')
     }
-  },[setWrongChain,chain])
+  },[setWrongChain,chain,username,svdAvatarCID,svdNftCID,setNftLevel,setNftName,setNftSign,setNftOp,setAvatarCID,setNFTCID])
 
   // Return page
   return (
@@ -186,7 +205,7 @@ export function BuildNFTModal({userWallet,nftMinted,nftUploaded}:{
 
     {(!wrongChain && isConnected && userWallet == address && !buildingNFT && nftCID !== '') ?
       <>
-        <MintNFTModal tokenUri={'ipfs://'+nftCID} address={address as string} onMint={()=>nftMinted()}/>
+        <MintNFTModal tokenUri={'ipfs://'+nftCID} address={address as string} onMint={()=>nftMinted()} minted={()=>setMinted(true)}/>
       </> : (wrongChain && isConnected && userWallet == address && !buildingNFT && nftCID !=='') ? 
             <>
             <div className="mt-5">
@@ -210,7 +229,7 @@ export function BuildNFTModal({userWallet,nftMinted,nftUploaded}:{
       </> : <></>
     }
 
-    { (buildingNFT || nftCID !== '') ? <></> :
+    { (buildingNFT || minted) ? <></> :
       <>
         <ConnectWalletModal showDisconnect={true}/>
       </>

@@ -24,6 +24,11 @@ export async function mintMiddleware(req: NextRequest) {
 
   // Build response
   const resp = NextResponse.next()
+  if(user.username){
+    resp.cookies.set('username',user.username)
+    resp.cookies.set('nft_avatar_cid',user.nft_0_avatar_cid)
+    resp.cookies.set('nft_cid',user.nft_0_cid)
+  }
   resp.cookies.set('address',token.id)
 
   // Return

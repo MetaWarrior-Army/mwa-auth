@@ -64,3 +64,14 @@ export async function uploadNFTPinata({nftFilePath,address}:{
   // Return result
   return uploadNftRes.IpfsHash
 }
+
+export async function unpinCID(CID:string) {
+  const pinataSDK = require('@pinata/sdk')
+  const pinata = await new pinataSDK({ pinataJWTKey: PINATA_JWT})
+  // unpin
+  const res = await pinata.unpin(CID)
+  console.log('Unpin result:')
+  console.log(res)
+  if(res !== 'OK') return undefined
+  return true
+}

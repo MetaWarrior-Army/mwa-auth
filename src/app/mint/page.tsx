@@ -41,7 +41,7 @@ export default function MintPage() {
             
             {cookies ? 
               <>
-                <BuildNFTModal userWallet={cookies.address} nftMinted={()=>setNftMinted(true)} nftUploaded={()=>setNftUploaded(true)}/>
+                <BuildNFTModal userWallet={cookies.address} nftMinted={()=>setNftMinted(true)} nftUploaded={()=>setNftUploaded(true)} username={cookies.username} svdAvatarCID={cookies.nft_avatar_cid} svdNftCID={cookies.nft_cid}/>
               </> : <></>
             }
             
