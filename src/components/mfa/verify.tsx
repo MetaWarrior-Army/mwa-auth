@@ -1,5 +1,5 @@
 import { startAuthentication } from '@simplewebauthn/browser'
-import { toasterNotify } from '@/utils/toast/toaster'
+import { toasterNotify } from '@/utils/app/toaster'
 
 // Verify MFA Key
 export function VerifyMFAModal() {

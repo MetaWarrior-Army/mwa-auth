@@ -49,8 +49,6 @@ export default async function middleware(req: NextRequest) {
 
   else if (req.nextUrl.pathname.startsWith('/')) {
     // Check if logged in, send to /profile
-    const token = getToken({req})
-    if(!token) return NextResponse.redirect(new URL('/login',req.url))
     return NextResponse.redirect(new URL('/profile',req.url))
   }
 }

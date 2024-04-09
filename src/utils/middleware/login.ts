@@ -56,10 +56,11 @@ export async function loginMiddleware(req: NextRequest){
   else{
     if(!auth_redirect) return NextResponse.json({error:'Invalid parameters, no redirect',status:500})
     // Only redirect to our domain
-    if(!auth_redirect.startsWith(APP_BASE_URL)) return NextResponse.json({error:'Invalid redirect',status:500})
     const res = NextResponse.next()
+    if(!auth_redirect.startsWith(APP_BASE_URL)) res.cookies.set('auth_redirect',APP_BASE_URL+'/profile')
+    else res.cookies.set('auth_redirect',auth_redirect)
     res.cookies.set('auth_client','mwa-auth')
-    res.cookies.set('auth_redirect',auth_redirect)
+    // Return
     return res
   }
 }

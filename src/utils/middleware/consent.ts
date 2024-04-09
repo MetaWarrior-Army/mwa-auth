@@ -1,5 +1,5 @@
 import {NextRequest,NextResponse} from 'next/server'
-import {sha512} from '@/utils/sha512'
+import {sha512} from '@/utils/app/sha512'
 import {getOAuth2ConsentRequest,
   acceptOAuth2ConsentRequest,
   genOAuthClientToken,
@@ -25,7 +25,7 @@ export async function consentMiddleware(req: NextRequest) {
   if(consentRequest.redirect_to) return NextResponse.redirect(consentRequest.redirect_to)
   
   // Get MwaUser from /api
-  const getUserReq = await fetch(APP_BASE_URL+'/api/getMwaUser',{
+  const getUserReq = await fetch(APP_BASE_URL+'/api/user/getMwaUser',{
     method: 'POST',
     headers: {'Content-type':'application/json'},
     body: JSON.stringify({secret: SECRET_HASH, address: consentRequest.subject})

@@ -1,5 +1,5 @@
 import {NextRequest,NextResponse} from 'next/server'
-import {sha512} from '@/utils/sha512'
+import {sha512} from '@/utils/app/sha512'
 import { PRIVATE_API_KEY, APP_BASE_URL } from '@/utils/app/constants'
 
 export async function mfaVerifyMiddleware(req: NextRequest) {

@@ -2,7 +2,7 @@
 import CredentialsProvider from "next-auth/providers/credentials"
 import { NextAuthOptions } from 'next-auth'
 import { verifyCredentials } from './verify'
-import { APP_DOMAIN, NEXTAUTH_SECRET } from '@/utils/app/constants'
+import { NEXTAUTH_SECRET } from '@/utils/app/constants'
 
 
 

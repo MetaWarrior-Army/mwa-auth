@@ -6,8 +6,8 @@ import { APP_BASE_URL } from '@/utils/app/constants'
 export async function mfaMiddleware(req: NextRequest) {
   console.log('middleware: /mfa')
     // Check for active session
-    const sessionToken = await getToken({req}) as AppSessionToken
-    if(!sessionToken){
+    const token = await getToken({req}) as AppSessionToken
+    if(!token){
       // Send user to /login with redirect
       const resp = NextResponse.redirect(new URL('/login?redirect='+APP_BASE_URL+'/mfa',req.url))
       // Come back after authenticating

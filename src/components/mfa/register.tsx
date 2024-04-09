@@ -1,5 +1,5 @@
 import { startRegistration } from '@simplewebauthn/browser'
-import { toasterNotify } from '@/utils/toast/toaster'
+import { toasterNotify } from '@/utils/app/toaster'
 
 // Register new MFA Key
 export function RegisterMFAModal({onRegister}: {onRegister: any}) {

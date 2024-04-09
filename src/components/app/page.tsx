@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
 import { APP_BASE_URL } from '@/utils/app/constants'
-import { ProfileBanner } from "../web3/web3"
+import { ProfileBanner } from "@/components/web3/web3"
 
 export function InfoBanner({signOutRedirect, showProfileLink}:{
   signOutRedirect?:string,

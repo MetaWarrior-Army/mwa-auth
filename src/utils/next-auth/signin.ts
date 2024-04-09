@@ -35,7 +35,7 @@ export async function mwaSignIn(signInMessage: MwaSignInMessage){
         body: JSON.stringify({login_challenge: signInMessage.login_challenge, address: signInMessage.address})
       })
       const acceptLoginRes = await acceptLoginReq.json()
-      if(!acceptLoginRes) throw Error('Failed to get result from /api/acceptLogin')
+      if(!acceptLoginRes) throw Error('Failed to get result from /api/oauth/acceptLogin')
       if(acceptLoginRes.error) throw Error(acceptLoginRes.error)
       // Redirect user
       return acceptLoginRes.redirect_to

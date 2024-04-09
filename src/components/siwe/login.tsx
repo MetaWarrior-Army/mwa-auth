@@ -2,7 +2,7 @@ import { ConnectWalletModal } from '@/components/web3/web3'
 import { useAccount, useSignMessage } from 'wagmi'
 import { SiweMessage } from 'siwe'
 import { useRouter } from "next/navigation"
-import { toasterNotify } from '@/utils/toast/toaster'
+import { toasterNotify } from '@/utils/app/toaster'
 import { mwaSignIn } from '@/utils/next-auth/signin'
 import { APP_DOMAIN } from '@/utils/app/constants'
 

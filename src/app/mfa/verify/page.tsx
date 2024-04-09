@@ -1,12 +1,12 @@
 'use client'
 
+import Web3Providers from '@/app/web3providers'
 import { FrameHeader, Modal } from '@/components/app/page'
+import { MfaLoginModal } from '@/components/mfa/login'
 import {useState,useEffect} from 'react'
 import Cookies from 'js-cookie'
-import { MfaLoginModal } from '@/components/mfa/login'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import Web3Providers from '@/app/web3providers'
 
 
 // Login

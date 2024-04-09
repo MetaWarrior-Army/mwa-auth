@@ -7,7 +7,7 @@ import type { AuthenticatorTransportFuture, CredentialDeviceType } from '@simple
 // - counter: number - SQL BIGINT
 // - credentialDeviceType: CredentialDeviceType
 // - credentialBackedUp: boolean
-// - transports?: AuthenticatorTransportFuture[] - Converted to JSON string and stored in DB
+// - transports?: AuthenticatorTransportFuture[] - Converted to JSON string and stored in DB, can be undefined by client
 // - user_address?: string - Required for MWA Application
 
 export type MfaCredential = {

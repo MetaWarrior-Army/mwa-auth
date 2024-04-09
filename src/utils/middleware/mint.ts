@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
-import { sha512 } from '@/utils/sha512'
+import { sha512 } from '@/utils/app/sha512'
 import { PRIVATE_API_KEY, APP_BASE_URL } from '@/utils/app/constants'
 import { AppSessionToken } from '@/utils/app/types'
 

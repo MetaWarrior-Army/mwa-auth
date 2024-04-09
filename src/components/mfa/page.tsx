@@ -1,4 +1,4 @@
-import { toasterNotify } from '@/utils/toast/toaster'
+import { toasterNotify } from '@/utils/app/toaster'
 
 export function ShowKeyCount({keycount}: {
   keycount: number

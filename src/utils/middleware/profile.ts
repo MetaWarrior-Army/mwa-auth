@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
-import { sha512 } from '@/utils/sha512'
+import { sha512 } from '@/utils/app/sha512'
 import { APP_BASE_URL,PRIVATE_API_KEY } from '../app/constants'
 import { MAIL_DOMAIN } from '../mail/constants'
 import { AppSessionToken, MwaUser } from '../app/types'
@@ -12,7 +12,7 @@ export async function profileMiddleware(req: NextRequest) {
 
   // Get user
   const SECRET_HASH = await sha512(PRIVATE_API_KEY)
-  const userReq = await fetch(APP_BASE_URL+'/api/getMwaUser', {
+  const userReq = await fetch(APP_BASE_URL+'/api/user/getMwaUser', {
     method: 'POST',
     headers: {'Content-type':'application:json'},
     body: JSON.stringify({secret: SECRET_HASH, address: token.id})

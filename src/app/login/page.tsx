@@ -1,12 +1,12 @@
 'use client'
 
-import { FrameHeader, InfoBanner, Modal } from '@/components/app/page'
-import Cookies from 'js-cookie'
-import { useEffect, useState } from 'react'
+import Web3Providers  from '@/app/web3providers'
+import { FrameHeader, InfoBanner, Modal, TinyDivider } from '@/components/app/page'
 import { SIWELoginModal } from '@/components/siwe/login'
+import { useEffect, useState } from 'react'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import Web3Providers  from '@/app/web3providers'
+import Cookies from 'js-cookie'
 
 export default function LoginPage() {
   const [redirect,setRedirect] = useState('')
@@ -29,11 +29,7 @@ export default function LoginPage() {
           {cookies ? 
             <>
               <SIWELoginModal redirect={cookies.auth_redirect} client={cookies.auth_client} login_challenge={cookies.login_challenge}/>        
-              <div className="inline-flex items-center justify-center w-full">
-                <hr className="w-64 h-1 my-8 border-0 rounded bg-gray-700"/>
-                <div className="absolute px-4 -translate-x-1/2 left-1/2 ">
-                </div>
-              </div>
+              <TinyDivider/>
               <InfoBanner/>
             </> : <></>
           }

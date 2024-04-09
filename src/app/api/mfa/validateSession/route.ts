@@ -1,4 +1,4 @@
-import { sha512 } from '@/utils/sha512';
+import { sha512 } from '@/utils/app/sha512';
 import { getMwaUser } from '@/utils/app/db/utils';
 import { NextRequest, NextResponse } from "next/server";
 import { MwaUser } from '@/utils/app/types';

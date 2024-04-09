@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getOAuth2LogoutRequest,acceptOAuth2LogoutRequest} from '@/utils/hydra/admin'
-import { APP_BASE_URL, PROJECT_URL } from '@/utils/app/constants'
+import { APP_BASE_URL } from '@/utils/app/constants'
 import { TRUSTED_OAUTH_CLIENTS } from '../hydra/constants'
 
 export async function logoutMiddleware(req: NextRequest) {
@@ -41,8 +41,8 @@ export async function logoutMiddleware(req: NextRequest) {
       return resp
     }
 
-    // Else redirect to PROJECT URL
+    // Else redirect to profile
     const resp = NextResponse.next()
-    resp.cookies.set('auth_redirect',PROJECT_URL)
+    resp.cookies.set('auth_redirect',APP_BASE_URL+'/profile')
     return resp
 }

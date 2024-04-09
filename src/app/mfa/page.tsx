@@ -1,5 +1,7 @@
 'use client'
 
+import Web3Providers  from '@/app/web3providers'
+import { Page, Header, Frame, Footer } from '@/components/app/layout'
 import { FrameHeader, InfoBanner, Modal } from '@/components/app/page'
 import {VerifyMFAModal} from '@/components/mfa/verify'
 import {RegisterMFAModal} from '@/components/mfa/register'
@@ -9,8 +11,7 @@ import { APP_DOMAIN } from '@/utils/app/constants'
 import {useState,useEffect} from 'react'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { Page, Header, Frame, Footer } from '@/components/app/layout'
-import Web3Providers  from '@/app/web3providers'
+
 
 // Login
 export default function MfaPage() {

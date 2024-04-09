@@ -3,7 +3,7 @@ import { ConnectWalletModal } from '@/components/web3/web3'
 import { useAccount } from 'wagmi'
 import { useRouter } from "next/navigation"
 import { startAuthentication } from '@simplewebauthn/browser'
-import { toasterNotify } from '@/utils/toast/toaster'
+import { toasterNotify } from '@/utils/app/toaster'
 import { mwaSignIn } from '@/utils/next-auth/signin'
 
 

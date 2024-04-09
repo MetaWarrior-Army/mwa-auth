@@ -1,8 +1,8 @@
 import dbConn from '@/utils/app/db/conn'
 import { MfaCredential } from '../types'
 import { MFA_DB_TABLE, MAX_MFA_SESSION_AGE } from '../constants'
-import { getRandomString } from '@/utils/rand'
-import { sha512 } from '@/utils/sha512'
+import { getRandomString } from '@/utils/app/rand'
+import { sha512 } from '@/utils/app/sha512'
 import { getMwaUser } from '@/utils/app/db/utils'
 import { MwaUser } from '@/utils/app/types'
 

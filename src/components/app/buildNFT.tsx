@@ -5,7 +5,7 @@ import { screenUsername } from './utils/screenusername'
 import { APP_BASE_URL, PINATA_GATEWAY_URL } from '@/utils/app/constants'
 import Image from 'next/image'
 import { MintNFTModal } from './mintNFT'
-import { toasterNotify } from '@/utils/toast/toaster'
+import { toasterNotify } from '@/utils/app/toaster'
 import { sepolia } from 'viem/chains'
 
 type Username = {
