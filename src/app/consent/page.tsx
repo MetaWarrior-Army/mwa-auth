@@ -28,7 +28,7 @@ export default function ConsentPage() {
       }
   },[redirect, cookies])
 
-  if(redirect !== ''){
+  if(redirect || (cookies && cookies.oauth_consent_redirect)){
     // Redirecting/Loading
     return(
       <div className="relative px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10">
@@ -41,26 +41,26 @@ export default function ConsentPage() {
   else{
     return (
       <>
-      <Web3Providers>
-        <Page>
-          <Header title="Consent"/>
-          <Frame>
-            <Modal>
-              <FrameHeader title="Do You Authorize?"/>
-              
-              <ConsentModal clientName={clientName} logoUri={logoUri} consentChallenge={consentChallenge} />
+        <Web3Providers>
+          <Page>
+            <Header title="Consent"/>
+            <Frame>
+              <Modal>
+                <FrameHeader title="Do You Authorize?"/>
                 
-              <div className="inline-flex items-center justify-center w-full">
-                <hr className="w-64 h-1 my-8 border-0 rounded bg-gray-700"/>
-                <div className="absolute px-4 -translate-x-1/2 left-1/2 ">
+                <ConsentModal clientName={clientName} logoUri={logoUri} consentChallenge={consentChallenge} />
+                  
+                <div className="inline-flex items-center justify-center w-full">
+                  <hr className="w-64 h-1 my-8 border-0 rounded bg-gray-700"/>
+                  <div className="absolute px-4 -translate-x-1/2 left-1/2 ">
+                  </div>
                 </div>
-              </div>
-              <InfoBanner/>
-            </Modal>
-          </Frame>  
-          <Footer/>
-        </Page>
-      </Web3Providers>
+                <InfoBanner/>
+              </Modal>
+            </Frame>  
+            <Footer/>
+          </Page>
+        </Web3Providers> 
       </>
     )
   }
