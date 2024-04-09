@@ -21,7 +21,17 @@ export async function profileMiddleware(req: NextRequest) {
   if(!user) return NextResponse.redirect(new URL('/',req.url))
 
   // Verify user
-  if(!user.email_active) return NextResponse.redirect(new URL('/mint',req.url))
+  if(!user.email_active) {
+    // Clear any leftover cookies
+    const resp = NextResponse.redirect(new URL('/mint',req.url))
+    resp.cookies.delete('account_address')
+    resp.cookies.delete('username')
+    resp.cookies.delete('email')
+    resp.cookies.delete('nft_avatar_cid')
+    resp.cookies.delete('nft_cid')
+    resp.cookies.delete('nft_tx')
+    return resp
+  }
 
   // Build response
   const response = NextResponse.next()      
