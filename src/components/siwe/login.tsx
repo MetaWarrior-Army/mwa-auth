@@ -77,7 +77,6 @@ export function SIWELoginModal({client, redirect, login_challenge}:{
 
   return (
     <div className="space-y-6 py-8 text-base leading-7 dark:text-slate-400">
-      <p>Sign a message with your wallet to <b>Log In</b>.</p>
       <div id="login">
         <button hidden={isConnected ? false : true}
           className="bg-slate-950 p-2 text-yellow-500 rounded-lg w-full shadow-xl border-solid border-2 hover:border-dotted border-yellow-500"

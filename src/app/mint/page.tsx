@@ -27,15 +27,22 @@ export default function MintPage() {
             {(!nftMinted && !nftUploaded) ?
               <>
                 <FrameHeader title="Mint Your Membership" icon="📜"/>
-                <p className="text-base text-slate-400 mb-10">Mint your Membership and join MetaWarrior Army.</p>
+                <div className="w-full flex-col text-center">
+                  <p className="text-base leading-7 text-slate-400 mb-10">Mint your Membership and <b>Join</b>.</p>
+                </div>
               </> : (!nftMinted && nftUploaded) ?
                     <>
                       <FrameHeader title="Membership Ready"/>
-                      <p className="text-base text-slate-400 mb-10">Your Membership is ready to Mint.</p>
+                      <div className="w-full flex-col text-center">
+                        <p className="text-base leading-7 text-slate-400 mb-10">Your Membership is ready to <b>Mint</b>.</p>
+                      </div>
                     </> : (nftMinted) ?
                           <>
                             <FrameHeader title="Minted"/>
-                            <p className="text-base text-slate-400 mb-10">Your Membership has been Minted!</p>
+                            <div className="w-full flex-col text-center">
+                              <p className="text-base leading-7 text-slate-400 mb-5">Your <b>Membership</b> has been Minted!.</p>
+                            </div>
+                            <p className="text-base leading-7 text-slate-400 mb-10">You are now a member of MetaWarrior Army. Visit your new <a href="https://mail.metawarrior.army" className="text-yellow-500 hover:text-yellow-300 font-bold"><u>Mailbox</u></a> to learn more.</p>
                           </> : <></>
             }
             

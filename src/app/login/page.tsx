@@ -25,6 +25,10 @@ export default function LoginPage() {
       <Web3Providers>
         <Modal>
           <FrameHeader title="Login to MetaWarrior Army"/>
+          
+          <div className="w-full flex-col text-center">
+              <p className="text-base leading-7 text-slate-400 mb-10">Sign a message with your wallet to <b>Log In</b>.</p>
+          </div>
 
           {cookies ? 
             <>

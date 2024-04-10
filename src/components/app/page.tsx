@@ -9,10 +9,10 @@ export function InfoBanner({signOutRedirect, showProfileLink}:{
   return (
     <>
     <div className="flex justify-between items-center pt-8 text-base font-semibold">
-      <div>
+      <div className="flex-col space-y-1 text-center">
         <ProfileBanner/>
       </div>
-      <div>
+      <div className="flex-col space-y-3 items-end text-right">
         {showProfileLink ? 
           <>
             <p><a href="/profile" className="text-yellow-500 hover:text-yellow-700">Profile &rarr;</a></p>
@@ -80,7 +80,7 @@ export function TinyDivider() {
 export function ServicesModal() {
   return (
     <>
-      <div className="mx-auto max-w-full mt-10">
+      <div className="mx-auto max-w-full mt-10 text-center">
         <p className="text-base font-bold text-slate-400">Your Services</p>
         <div className="flex justify-between items-start w-full mt-5">
           <div>

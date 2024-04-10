@@ -18,7 +18,9 @@ export default function Profile() {
         <Frame>
           <Modal>
             <FrameHeader title="Membership Profile"/>
-            <p className="text-base leading-7 text-slate-400 mb-10">Welcome</p>
+            <div className="w-full flex-col text-center">
+              <p className="text-base leading-7 text-slate-400 mb-10">Welcome</p>
+            </div>
 
             {cookies ?
               <>
