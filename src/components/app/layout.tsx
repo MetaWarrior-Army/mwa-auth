@@ -38,7 +38,7 @@ export function Frame(props: { children: ReactNode }) {
 
 export function Footer () {
   return (
-    <div className="text-xs flex align-top">
+    <div className="flex mx-auto items-center text-xs">
       <a href="https://www.metawarrior.army" className="">
         <Image src="https://www.metawarrior.army/media/img/icon.png" alt="mwa_icon" width={25} height={25}/>
       </a> 

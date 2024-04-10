@@ -16,6 +16,8 @@ export async function logoutMiddleware(req: NextRequest) {
       // Validate logout challenge
       const logoutRequest = await getOAuth2LogoutRequest(logout_challenge)
       if(!logoutRequest) return NextResponse.json({error:'Failed to get logout_challenge',status:500})
+      if(logoutRequest.redirect_to) return NextResponse.redirect(logoutRequest.redirect_to)
+      console.log(logoutRequest)
       
       // Accept logout challenge
       const acceptRequest = await acceptOAuth2LogoutRequest(logoutRequest.challenge)
@@ -23,13 +25,16 @@ export async function logoutMiddleware(req: NextRequest) {
       
       // Check for Trusted OAuth Clients
       // Forward trusted OAuth clients to log out here
-      if(TRUSTED_OAUTH_CLIENTS.includes(logoutRequest.client.client_id)){
-        console.log('middleware: /logout: trusted oauth client logging out')
-        const resp = NextResponse.next()
-        console.log('Setting response to: ',acceptRequest.redirect_to)
-        resp.cookies.set('auth_redirect',acceptRequest.redirect_to)
-        return resp
+      if(logoutRequest.client){
+        if(TRUSTED_OAUTH_CLIENTS.includes(logoutRequest.client.client_id)){
+          console.log('middleware: /logout: trusted oauth client logging out')
+          const resp = NextResponse.next()
+          console.log('Setting response to: ',acceptRequest.redirect_to)
+          resp.cookies.set('auth_redirect',acceptRequest.redirect_to)
+          return resp
+        }
       }
+      
 
       // Redirect user
       return NextResponse.redirect(new URL(acceptRequest.redirect_to,req.url))
