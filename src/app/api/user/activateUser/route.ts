@@ -31,8 +31,8 @@ export async function POST(req: NextRequest) {
   if(!validSession) return NextResponse.json({error:'Invalid session',status:500})
 
   // Consume invite code
-  //const useInv = await useInviteCode(address,invite)
-  //if(!useInv) return NextResponse.json({error:'Failed to consume invite code',status:500})
+  const useInv = await useInviteCode(address,invite)
+  if(!useInv) return NextResponse.json({error:'Failed to consume invite code',status:500})
 
   // Create personal referral code
   //const createRef = await createReferral(address)

@@ -61,8 +61,8 @@ export async function checkInvite(invite:string) {
 
 export async function useInviteCode(address:string, invite:string) {
   // Check code
-  const checkInv = await checkInvite(invite)
-  if(!checkInv) return undefined
+  //const checkInv = await checkInvite(invite)
+  //if(!checkInv) return undefined
   // Update code
   const getInvQuery = "SELECT * FROM codes WHERE code='"+invite+"'"
   const getInvRes = await dbConn.query(getInvQuery)
