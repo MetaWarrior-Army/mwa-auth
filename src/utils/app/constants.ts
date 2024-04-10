@@ -23,7 +23,7 @@ export const USERNAME_MIN_LENGTH = 5
 // Private
 export const PINATA_JWT = process.env.PINATA_JWT as string
 export const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY as string
-export const ALCHEMY_SEPOLIA_URL = process.env.ALCHEMY_SEPOLIA_URL as string
+export const ALCHEMY_SEPOLIA_URL = process.env.NEXT_PUBLIC_ALCHEMY_SEPOLIA_URL as string
 export const MAILSERVER_API_URL = process.env.MAILSERVER_API_URL as string
 export const MAILSERVER_API_KEY = process.env.MAILSERVER_API_KEY as string
 
