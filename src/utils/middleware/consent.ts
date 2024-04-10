@@ -32,18 +32,10 @@ export async function consentMiddleware(req: NextRequest) {
   })
   const mwaUser = await getUserReq.json()
   if(!mwaUser) return NextResponse.json({error:'Failed to interact with /api/getMwaUser',status:500})
-  
-  // Check protected OAuth clients
-  if(!mwaUser.email_active) {
-    if(PROTECTED_OAUTH_CLIENTS.includes(consentRequest.client.client_id)) {
-      console.log('middleware: /consent: Autorejecting user from protected OAuth client')
-      // Reject consent for OAuth clients that require a fully baked user
-      const rejectReq = await rejectOAuth2ConsentRequest(consentRequest.challenge)
-      if(!rejectReq) return NextResponse.json({error:'Failed to rejectOAuth2ConsentRequest',status:500})
-      return NextResponse.redirect(rejectReq.redirect_to)
-    }
-  }
-  
+
+  // Redirect inactive users to mint
+  if(!mwaUser.email_active) return NextResponse.redirect(APP_BASE_URL+'/mint')
+    
   // Build the response
   const resp = NextResponse.next()
   resp.cookies.delete('oauth_consent_redirect')

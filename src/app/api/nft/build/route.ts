@@ -41,6 +41,7 @@ export async function POST(req: NextRequest) {
 
   // Verify user
   const user = await getMwaUser(token.id) as MwaUser
+  if(!user) return NextResponse.json({error:'Failed to get user'})
   if(user.email_active) return NextResponse.json({error:'User already has account',status:500})
 
   // Generate avatar
