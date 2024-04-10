@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
   if(!id || !msg) return NextResponse.json({error:'Invalid parameters.',status:500})
 
   // Decode parameters
-  const username = atob(msg)
+  const username = atob(msg).toLowerCase()
   const address = atob(id)
 
   // Validate session

@@ -9,25 +9,25 @@ import { BLOCKED_USERNAMES } from '@/components/app/utils/blockedusernames'
 // a proper username is entered into the datababse.
 // activateUser pulls values from the database.
 export async function screenUsername(username: string){
-  
+  const usernameLowered = username.toLowerCase()
   // First check length
-  if(username.length < USERNAME_MIN_LENGTH){
+  if(usernameLowered.length < USERNAME_MIN_LENGTH){
     return {ok:false,msg:'Username is too short.'}
   }
-  if(username.length > USERNAME_MAX_LENGTH) {
+  if(usernameLowered.length > USERNAME_MAX_LENGTH) {
     return {ok:false,msg:'Username is too long.'}
   }
   // Screen invalid characters
-  if(/(#|\$|\^|%|@|!|&|\*|\(|\)|\+|=|\[|\]|{|}|\\|\||\;|:|'|"|~|`|,|\.|\?|>|\/|<)/.test(username)) return {ok:false,msg:'Invalid characters in username.'}
+  if(/(#|\$|\^|%|@|!|&|\*|\(|\)|\+|=|\[|\]|{|}|\\|\||\;|:|'|"|~|`|,|\.|\?|>|\/|<)/.test(usernameLowered)) return {ok:false,msg:'Invalid characters in username.'}
 
   // Check static list of reserved usernames
-  if(BLOCKED_USERNAMES.includes(username)) return {ok:false,msg:'Username unavailable.'}
+  if(BLOCKED_USERNAMES.includes(usernameLowered)) return {ok:false,msg:'Username unavailable.'}
 
   // Check database for availability
   const checkUsername = await fetch(APP_BASE_URL+'/api/user/checkusername',{
     method: 'POST',
     headers: {'Content-type':'application/json'},
-    body: JSON.stringify({username: username})
+    body: JSON.stringify({username: usernameLowered})
   })
   const checkResult = await checkUsername.json()
   if(!checkResult) return undefined
