@@ -1,5 +1,6 @@
 import dbConn from "./conn";
 import { MwaUser } from "../types";
+import { getRandomString } from "../rand";
 
 export async function getMwaUser(address: string): Promise<MwaUser|undefined> {
   const getUserQuery = "SELECT * FROM users WHERE address='"+address+"'"
@@ -46,5 +47,56 @@ export async function updateNftTx(address: string,txHash:string,tokenId:number) 
   const queryRes = await dbConn.query(updateQuery)
   if(!queryRes) return undefined
   if(queryRes.rowCount == 0) return undefined
+  return true
+}
+
+export async function checkInvite(invite:string) {
+  const searchQuery = "SELECT * from codes WHERE code='"+invite+"'"
+  const searchRes = await dbConn.query(searchQuery)
+  if(searchRes.rowCount == 0) return undefined
+  const code = searchRes.rows[0]
+  if(parseInt(code.times_used) >= parseInt(code.supply)) return undefined
+  return true
+}
+
+export async function useInviteCode(address:string, invite:string) {
+  // Check code
+  const checkInv = await checkInvite(invite)
+  if(!checkInv) return undefined
+  // Update code
+  const getInvQuery = "SELECT * FROM codes WHERE code='"+invite+"'"
+  const getInvRes = await dbConn.query(getInvQuery)
+  if(getInvRes.rowCount == 0) return undefined
+  const currentCount = parseInt(getInvRes.rows[0].times_used)
+  const newCount = currentCount + 1
+  const updateInvQuery = "UPDATE codes SET times_used="+newCount+" WHERE code='"+invite+"'"
+  const updateRes = await dbConn.query(updateInvQuery)
+  if(updateRes.rowCount == 0) return undefined
+  // Update user
+  const updateUserQuery = "UPDATE users SET invite_code='"+invite+"' WHERE address='"+address+"'"
+  const updateUserRes = await dbConn.query(updateUserQuery)
+  if(updateUserRes.rowCount == 0) return undefined
+  // Finished
+  return true
+}
+
+export async function checkReferral(code:string) {
+  const searchCodeQuery = "SELECT * FROM users WHERE referral_code='"+code+"'"
+  const searchRes = await dbConn.query(searchCodeQuery)
+  if(searchRes.rowCount == 0) return undefined
+  return true
+}
+
+export async function createReferral(address:string) {
+  let code = getRandomString(8)
+  let check = true
+  while(check){
+    const checkInv = await checkInvite(code)
+    if(checkInv) code = getRandomString(8)
+    check = false
+  }
+  const updateQuery = "UPDATE users SET referral_code='"+code+"' WHERE address='"+address+"'"
+  const updateRes = await dbConn.query(updateQuery)
+  if(updateRes.rowCount == 0) return undefined
   return true
 }

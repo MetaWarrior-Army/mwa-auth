@@ -35,3 +35,6 @@ export const NFT_JSON_FILEEXT = process.env.NFT_JSON_FILEEXT as string
 
 // Etherscan
 export const ETHERSCAN_SEPOLIA_API_URL = process.env.NEXT_PUBLIC_ETHERSCAN_SEPOLIA_API_URL as string
+
+// Invite Only
+export const APP_INVITE_ONLY = process.env.APP_INVITE_ONLY as string

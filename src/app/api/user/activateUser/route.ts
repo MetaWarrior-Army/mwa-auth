@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
-import { getMwaUser } from '@/utils/app/db/utils'
+import { createReferral, getMwaUser, useInviteCode } from '@/utils/app/db/utils'
 import { validateMfaSession } from '@/utils/mfa/db/utils'
 import { MwaUser, AppSessionToken } from '@/utils/app/types'
 import { MAILSERVER_API_KEY, MAILSERVER_API_URL } from '@/utils/app/constants'
@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   if(!token) return NextResponse.json({error:'No Session',status:500})
 
   // Get parameters
-  const { id, msg } = await req.json()
+  const { id, msg, invite } = await req.json()
 
   // Decode parameters
   const address = atob(id)
@@ -30,6 +30,14 @@ export async function POST(req: NextRequest) {
   const validSession = await validateMfaSession(address,session)
   if(!validSession) return NextResponse.json({error:'Invalid session',status:500})
 
+  // Consume invite code
+  //const useInv = await useInviteCode(address,invite)
+  //if(!useInv) return NextResponse.json({error:'Failed to consume invite code',status:500})
+
+  // Create personal referral code
+  //const createRef = await createReferral(address)
+  //if(!createRef) return NextResponse.json({error:'Failed to create referral',status:500})
+
   // Right now this sets email_active in user row, effectively enabling their account across all protected OAuth Clients
   // Create Mailbox
   const createMB = await fetch(MAILSERVER_API_URL+'/create_mailbox.php', {
@@ -40,6 +48,8 @@ export async function POST(req: NextRequest) {
   const createRes = await createMB.json()
   if(!createRes) return NextResponse.json({error:'Failed to create mailbox',status:500})
   if(!createRes.success) return NextResponse.json({error:'Failed to create mailbox',status:500})
+
+  
   
   // Account activated
   // Return response

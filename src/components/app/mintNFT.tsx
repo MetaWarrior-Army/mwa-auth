@@ -5,12 +5,13 @@ import { useEffect, useState } from 'react'
 import { Address, parseEther } from 'viem'
 import { useWriteContract, useSimulateContract, useWaitForTransactionReceipt } from 'wagmi'
 
-export function MintNFTModal({tokenUri,address,onMint,minted,minting}:{
+export function MintNFTModal({tokenUri,address,onMint,minted,minting,invite}:{
   tokenUri: string,
   address: string,
   onMint: any,
   minted: any,
   minting: any,
+  invite?: string,
 }) {
   const [mintFinished,setMintFinished] = useState(false)
   const [txConfirming,setTxConfirming] = useState(false)
@@ -30,18 +31,16 @@ export function MintNFTModal({tokenUri,address,onMint,minted,minting}:{
 
   // Activate Account
   async function activateAccount(){
-    console.log('activateAccount()')
     setAccountActivating(true)
     const activateRequest = await fetch(APP_BASE_URL+'/api/user/activateUser',{
       method: 'POST',
       headers: {'Content-type':'application/json'},
-      body: JSON.stringify({id:btoa(address),msg:btoa(activateSession)})
+      body: JSON.stringify({id:btoa(address),msg:btoa(activateSession),invite:invite})
     })
     const activateRes = await activateRequest.json()
     if(!activateRes) throw Error('Failed to activate account')
     if(!activateRes.activated) throw Error('Failed to activate account.')
 
-    console.log('Account Activated')
     setAccountActivated(true)
     setAccountActivating(false)
     minted()
@@ -70,9 +69,8 @@ export function MintNFTModal({tokenUri,address,onMint,minted,minting}:{
       const res = await confirmReq.json()
       if(!res) throw Error('Failed to verify transaction.')
       if(!res.verified) throw Error('Failed to verify transaction')
-      console.log('Got activation session: '+res.session)
+
       // Update UI
-      console.log('Transaction verified')
       setActivateSession(res.session)
       setTxConfirmed(true)
       setTxConfirming(false)
@@ -85,10 +83,6 @@ export function MintNFTModal({tokenUri,address,onMint,minted,minting}:{
   }
   
   useEffect(()=>{
-    // Confirm Tx Server Side and activate user account
-    console.log('tokenUri: '+tokenUri)
-    console.log('address: '+address)
-
     if(isConfirming){
       minting()
     }
@@ -100,8 +94,7 @@ export function MintNFTModal({tokenUri,address,onMint,minted,minting}:{
     if(txConfirmed && !accountActivated){
       activateAccount()
     }
-
-  },[isConfirmed,txConfirmed,accountActivated,confirmTx,activateAccount,address,tokenUri])
+  },[isConfirming,minting,isConfirmed,txConfirmed,accountActivated,confirmTx,activateAccount,address,tokenUri])
 
   return (
     <>
@@ -171,7 +164,6 @@ export function MintNFTModal({tokenUri,address,onMint,minted,minting}:{
 
     {(simData) ? 
       <>
-        
         <div className="mt-5 mb-5"
           hidden={isConfirmed || isConfirming || txConfirming}
           >
@@ -186,11 +178,6 @@ export function MintNFTModal({tokenUri,address,onMint,minted,minting}:{
         </div>
       </> : <></>
     }
-
-    {
-
-    }
-    
 
     {(mintFinished && WaitForTransactionReceiptData && accountActivated) ? 
       <>

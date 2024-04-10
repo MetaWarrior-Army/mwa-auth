@@ -7,6 +7,7 @@ import { mfaMiddleware } from '@/utils/middleware/mfa'
 import { profileMiddleware } from '@/utils/middleware/profile'
 import { mintMiddleware } from '@/utils/middleware/mint'
 import { declineUsernameMiddleware } from '@/utils/middleware/declineusername'
+import { inviteMiddleware } from '@/utils/middleware/invite'
 
 // Middleware
 export default async function middleware(req: NextRequest) {
@@ -51,6 +52,10 @@ export default async function middleware(req: NextRequest) {
     return mintMiddleware(req)
   }
 
+  else if (req.nextUrl.pathname.startsWith('/invite')) {
+    return inviteMiddleware(req)
+  }
+
   else if (req.nextUrl.pathname.startsWith('/')) {
     // Check if logged in, send to /profile
     return NextResponse.redirect(new URL('/profile',req.url))
@@ -70,6 +75,7 @@ export const config = {
      * - profile
      * - mint
      * - mint/declineusername
+     * - invite
      * - /
      * NOT:
      * - api (API routes)
@@ -79,7 +85,7 @@ export const config = {
      * - favicon.ico (favicon file)
      */
     {
-      source: '/((?!api|_next|_next\/static|_next\/image|favicon.ico))(login|consent|logout|mfa|mfa\/verify|profile|mint|mint\/declineusername|)',
+      source: '/((?!api|_next|_next\/static|_next\/image|favicon.ico))(login|consent|logout|mfa|mfa\/verify|profile|mint|mint\/declineusername|invite|)',
       missing: [
         { type: 'header', key: 'next-router-prefetch' },
         { type: 'header', key: 'purpose', value: 'prefetch' },

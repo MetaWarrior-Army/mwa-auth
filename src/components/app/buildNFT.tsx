@@ -8,17 +8,14 @@ import { MintNFTModal } from './mintNFT'
 import { toasterNotify } from '@/utils/app/toaster'
 import { sepolia } from 'viem/chains'
 
-type Username = {
-  value: string,
-}
-
-export function BuildNFTModal({userWallet,nftMinted,nftUploaded,username,svdAvatarCID,svdNftCID}:{
+export function BuildNFTModal({userWallet,nftMinted,nftUploaded,username,svdAvatarCID,svdNftCID,invite}:{
   userWallet: string,
   nftMinted: any,
   nftUploaded: any,
   username?: string,
   svdAvatarCID?: string,
   svdNftCID?: string,
+  invite?: string,
 }){
   const [tos,setTOS] = useState(false)
   const [validUsername,setValidUsername] = useState(false)
@@ -39,9 +36,8 @@ export function BuildNFTModal({userWallet,nftMinted,nftUploaded,username,svdAvat
   async function build(){
     try{
       setBuildingNFT(true)
-      console.log('build()')
       // Get Username
-      const username = document.getElementById('usernameInput') as unknown as Username
+      const username = document.getElementById('usernameInput') as HTMLInputElement
       if(!username) throw Error('Failed to capture username')
       // Build NFT
       const buildReq = await fetch(APP_BASE_URL+'/api/nft/build',{
@@ -60,7 +56,6 @@ export function BuildNFTModal({userWallet,nftMinted,nftUploaded,username,svdAvat
         setAvatarCID(build.avatar_cid)
         const fetchNFT = await fetch(PINATA_GATEWAY_URL+'/ipfs/'+build.nft_cid)
         const nftMeta = await fetchNFT.json()
-        console.log(nftMeta)
         setNftName(nftMeta.name)
         setNftLevel(nftMeta.attributes[3].value)
         setNftOp(nftMeta.attributes[2].value)
@@ -122,11 +117,9 @@ export function BuildNFTModal({userWallet,nftMinted,nftUploaded,username,svdAvat
 
     if(chain?.id !== sepolia.id) {
       setWrongChain(true)
-      console.log('Wrong chain connected')
     }
     else{
       setWrongChain(false)
-      console.log('Right chain connected')
     }
   },[setWrongChain,chain,username,svdAvatarCID,svdNftCID,setNftLevel,setNftName,setNftSign,setNftOp,setAvatarCID,setNFTCID])
 
@@ -220,7 +213,8 @@ export function BuildNFTModal({userWallet,nftMinted,nftUploaded,username,svdAvat
             setMinting(false)
             setMinted(true)
           }}
-          minting={()=>setMinting(true)}/>
+          minting={()=>setMinting(true)}
+          invite={invite}/>
       </> : (wrongChain && isConnected && userWallet == address && !buildingNFT && nftCID !=='') ? 
             <>
             <div className="mt-5">

@@ -1,12 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 import { sha512 } from '@/utils/app/sha512'
-import { PRIVATE_API_KEY, APP_BASE_URL } from '@/utils/app/constants'
+import { PRIVATE_API_KEY, APP_BASE_URL, APP_INVITE_ONLY } from '@/utils/app/constants'
 import { AppSessionToken } from '@/utils/app/types'
 
 
 export async function mintMiddleware(req: NextRequest) {
   console.log('middleware: /mint')
+
+  // Check if app is set to INVITE ONLY
+  let invite
+  if(APP_INVITE_ONLY == 'true'){
+    invite = req.nextUrl.searchParams.get('invite')
+    if(!invite) return NextResponse.redirect(APP_BASE_URL+'/invite')
+
+    const SECRET_HASH = await sha512(PRIVATE_API_KEY)
+    const checkInvReq = await fetch(APP_BASE_URL+'/api/user/checkinvite',{
+      method: 'POST',
+      headers: {'Content-type':'application/json'},
+      body: JSON.stringify({secret: SECRET_HASH, msg:btoa(invite)})
+    })
+    const checkInvRes = await checkInvReq.json()
+    if(!checkInvRes) return NextResponse.redirect(APP_BASE_URL+'/invite')
+    if(!checkInvRes.ok) return NextResponse.redirect(APP_BASE_URL+'/invite')
+  }
 
   // Get Token
   const token = await getToken({req}) as AppSessionToken
@@ -35,6 +52,7 @@ export async function mintMiddleware(req: NextRequest) {
     resp.cookies.delete('nft_avatar_cid')
     resp.cookies.delete('nft_cid')
   }
+  if(APP_INVITE_ONLY) resp.cookies.set('invite',invite as string)
   resp.cookies.set('address',token.id)
 
   // Return
