@@ -84,12 +84,8 @@ export default function MfaPage() {
             <p>MetaWarrior Army implements the WebAuthn standard which supports most physical security keys. This is our preferred method.</p>
             <p>Passkeys are also supported. Most browsers and devices support passkeys, as do most password managers installed as extensions in browsers or on mobile phones.</p>
           </div>
-          <div className="inline-flex items-center justify-center w-full">
-            <hr className="w-64 h-1 my-8 border-0 rounded bg-gray-700"/>
-            <div className="absolute px-4 -translate-x-1/2 left-1/2 ">
-            </div>
-          </div>
-
+          
+          <TinyDivider/>
 
           <InfoBanner signOutRedirect={signOutRedirect} showProfileLink={true}/>
         </Modal>
