@@ -1,5 +1,10 @@
 // A static list of blocked usernames
 export const BLOCKED_USERNAMES = ["admin",
+"testaccount",
+"testuser",
+"testmember",
+"testadmin",
+"testroot",
 "blog",
 "mpoletiek",
 "moderator",

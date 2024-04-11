@@ -5,7 +5,7 @@ import { APP_BASE_URL } from '../app/constants'
 export async function inviteMiddleware(req:NextRequest) {
   console.log('middleware: /invite')
   // Get Token
-  const token = getToken({req})
+  const token = await getToken({req})
   if(!token) return NextResponse.redirect(APP_BASE_URL+'/login?redirect=https://auth.metawarrior.army/invite')
   return NextResponse.next()
 }

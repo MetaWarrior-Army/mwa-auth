@@ -54,7 +54,11 @@ export default function MintPage() {
             
             <TinyDivider/>
             
-            <InfoBanner signOutRedirect={APP_BASE_URL+"/mint"}/>
+            {cookies ? 
+              <>
+                <InfoBanner signOutRedirect={APP_BASE_URL+"/mint?invite="+cookies.invite}/>
+              </> : <></>
+            }
           </Modal>
         </Frame>
         <Footer/>

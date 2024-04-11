@@ -30,6 +30,7 @@ export async function profileMiddleware(req: NextRequest) {
     resp.cookies.delete('nft_avatar_cid')
     resp.cookies.delete('nft_cid')
     resp.cookies.delete('nft_tx')
+    resp.cookies.delete('referral')
     return resp
   }
 
@@ -44,7 +45,7 @@ export async function profileMiddleware(req: NextRequest) {
   response.cookies.set('nft_cid',user.nft_0_cid as string)
   response.cookies.set('nft_id',user.nft_0_id as string)
   response.cookies.set('nft_tx',user.nft_0_tx as string)
-
+  response.cookies.set('referral',user.referral_code as string)
 
   // Return
   return response

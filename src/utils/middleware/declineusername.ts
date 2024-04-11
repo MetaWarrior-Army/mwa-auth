@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
-import { PRIVATE_API_KEY, APP_BASE_URL } from '@/utils/app/constants'
+import { PRIVATE_API_KEY, APP_BASE_URL, APP_INVITE_ONLY } from '@/utils/app/constants'
 import { sha512 } from '@/utils/app/sha512'
 import { AppSessionToken } from '../app/types'
 
@@ -21,9 +21,18 @@ export async function declineUsernameMiddleware(req: NextRequest) {
   const res = await clearReq.json()
   if(!res) return NextResponse.json({error:'Failed to clear username',status:500})
   if(!res.cleared) return NextResponse.json({error:'Failed to clear username',status:500})
-  
+
+  // Check for invite
+  const invite = req.nextUrl.searchParams.get('invite')
+    
   // Build response
-  const resp = NextResponse.redirect(APP_BASE_URL+'/mint')
+  let resp
+  if(invite) {
+    resp = NextResponse.redirect(APP_BASE_URL+'/mint?invite='+invite)
+  }
+  else{
+    resp = NextResponse.redirect(APP_BASE_URL+'/mint')
+  }
   resp.cookies.delete('username')
   resp.cookies.delete('nft_avatar_cid')
   resp.cookies.delete('nft_cid')

@@ -18,7 +18,7 @@ export async function mintMiddleware(req: NextRequest) {
     const checkInvReq = await fetch(APP_BASE_URL+'/api/user/checkinvite',{
       method: 'POST',
       headers: {'Content-type':'application/json'},
-      body: JSON.stringify({secret: SECRET_HASH, msg:btoa(invite)})
+      body: JSON.stringify({secret: SECRET_HASH, msg:btoa(invite as string)})
     })
     const checkInvRes = await checkInvReq.json()
     if(!checkInvRes) return NextResponse.redirect(APP_BASE_URL+'/invite')
@@ -27,7 +27,10 @@ export async function mintMiddleware(req: NextRequest) {
 
   // Get Token
   const token = await getToken({req}) as AppSessionToken
-  if(!token || !token.user) return NextResponse.redirect(new URL('/login?redirect='+APP_BASE_URL+'/mint',req.url))
+  if(!token) {
+    if(invite) return NextResponse.redirect(APP_BASE_URL+'/login?redirect='+APP_BASE_URL+'/mint?invite='+invite)
+    return NextResponse.redirect(APP_BASE_URL+'/login?redirect='+APP_BASE_URL+'/mint') 
+  }
 
   // Get/Validate user
   const SECRET_HASH = await sha512(PRIVATE_API_KEY)

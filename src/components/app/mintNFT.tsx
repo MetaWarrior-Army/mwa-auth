@@ -167,7 +167,7 @@ export function MintNFTModal({tokenUri,address,onMint,minted,minting,invite}:{
         <div className="mt-5 mb-5"
           hidden={isConfirmed || isConfirming || txConfirming}
           >
-          <p className="text-base text-slate-400 mb-10">You cannot change your username once you mint. Other variables such as Membership Level and your Sign have been predetermined for you. <a className="text-slate-500 hover:text-slate-300" href="/mint/declineusername"><u>Go Back</u></a> to choose a different username.</p>
+          <p className="text-base text-slate-400 mb-10">You cannot change your username once you mint. Other variables such as Membership Level and your Sign have been predetermined for you. <a className="text-slate-500 hover:text-slate-300" href={'/mint/declineusername?invite='+invite}><u>Go Back</u></a> to choose a different username.</p>
           <button
             hidden={isConfirmed || isConfirming || txConfirming}
             disabled={isConfirmed || isConfirming}

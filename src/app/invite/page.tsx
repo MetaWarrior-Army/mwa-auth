@@ -1,12 +1,13 @@
 'use client'
 
 import { Page, Header, Frame } from '@/components/app/layout'
-import { FrameHeader, Modal } from '@/components/app/page'
+import { FrameHeader, InfoBanner, Modal, TinyDivider } from '@/components/app/page'
 import { screenInvite } from './screeninvite'
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { APP_BASE_URL } from '@/utils/app/constants'
+import Web3Providers from '../web3providers'
 
 type inputElement = {
   value: string
@@ -44,6 +45,7 @@ export default function InvitePage() {
 
   return (
     <>
+    <Web3Providers>
     <Page>
       <Header title="MWA"/>
       <Frame>
@@ -84,9 +86,13 @@ export default function InvitePage() {
               >Use Invite</button>
           </div>
 
+          <TinyDivider/>
+            
+          <InfoBanner signOutRedirect={APP_BASE_URL+"/invite"}/>
         </Modal>
       </Frame>
     </Page>
+    </Web3Providers>
     </>
   )
 }

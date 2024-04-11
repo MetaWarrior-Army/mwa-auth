@@ -82,7 +82,6 @@ export async function consumeInvite(address:string, invite:string) {
 }
 
 export async function checkReferral(code:string) {
-  console.log('Checking referral code')
   const searchCodeQuery = "SELECT * FROM users WHERE referral_code='"+code+"'"
   const searchRes = await dbConn.query(searchCodeQuery)
   if(searchRes.rowCount == 0) return undefined

@@ -3,13 +3,15 @@
 import { NFT_CONTRACT_ADDRESS, PINATA_GATEWAY_URL } from '@/utils/app/constants'
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
+import { toasterNotify } from '@/utils/app/toaster'
 
 
-export function ProfileModal({nftCID, avatarCID, nftTx, nftId}:{
+export function ProfileModal({nftCID, avatarCID, nftTx, nftId, referral}:{
   nftCID: string,
   avatarCID: string,
   nftTx: string,
   nftId: string,
+  referral?: string,
 }) {
   const [nftName,setNftName] = useState('')
   const [nftLevel,setNftLevel] = useState('')
@@ -28,6 +30,11 @@ export function ProfileModal({nftCID, avatarCID, nftTx, nftId}:{
     setNftSign(nftMeta.attributes[4].value)
   }
 
+  async function copyReferral(){
+    await navigator.clipboard.writeText('https://auth.metawarrior.army/mint?invite='+referral)
+    toasterNotify({message:'Invite link copied!',type:'success'})
+  }
+
 
   useEffect(()=>{
     if(nftName == ''){
@@ -39,6 +46,12 @@ export function ProfileModal({nftCID, avatarCID, nftTx, nftId}:{
 
   return (
     <>
+    {referral ? 
+      <>
+      <p className="text-base text-slate-400">Invite others to join MetaWarrior Army with your personal referral code: <a className="text-yellow-400 font-bold hover:text-yellow-500" onClick={copyReferral}><u>{referral}</u></a></p>
+      </> : <></>
+    }
+
     {(nftName !== '') ? 
       <>
         <div className="mt-3 mb-3 w-full justify-center space-y-3 bg-slate-900 rounded-lg shadow-2xl p-5">
@@ -52,7 +65,10 @@ export function ProfileModal({nftCID, avatarCID, nftTx, nftId}:{
           <p className="text-base text-slate-400">Membership Level: <span className="font-bold text-green-400">{nftLevel}</span></p>
           <p className="text-base text-slate-400">Operation: <span className="font-bold text-red-400">{nftOp}</span></p>
           <p className="text-base text-slate-400"><a href={'https://sepolia.etherscan.io/tx/'+nftTx} target="_blank"><u>Transaction</u></a></p>
-          <p className="text-base text-slate-400">View on <a href={'https://testnets.opensea.io/assets/sepolia/'+NFT_CONTRACT_ADDRESS+'/'+nftId} target="_blank"><u>OpenSea</u></a></p>
+          <div className="w-full flex justify-between text-right">
+            <p className="text-base text-slate-400">View on <a href={'https://testnets.opensea.io/assets/sepolia/'+NFT_CONTRACT_ADDRESS+'/'+nftId} target="_blank"><u>OpenSea</u></a></p>
+            <p className="text-xl">❔</p>
+          </div>
         </div>
       </>
       : 

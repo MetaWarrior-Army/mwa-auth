@@ -1,5 +1,5 @@
 import { APP_BASE_URL, USERNAME_MAX_LENGTH, USERNAME_MIN_LENGTH } from "@/utils/app/constants";
-import { BLOCKED_USERNAMES } from '@/components/app/utils/blockedusernames'
+import { BLOCKED_USERNAMES } from '@/utils/app/nft/blockedusernames'
 
 // We screen the username requested 3 times in this app.
 // First we do it here, client side in the UI
