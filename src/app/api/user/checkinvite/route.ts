@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 import { AppSessionToken } from '@/utils/app/types'
-import { checkInvite } from '@/utils/app/db/utils'
+import { checkInvite, checkReferral } from '@/utils/app/db/utils'
 import { sha512 } from '@/utils/app/sha512'
 import { PRIVATE_API_KEY } from '@/utils/app/constants'
 
@@ -30,8 +30,9 @@ export async function POST(req: NextRequest) {
   if(/(#|\$|\^|%|@|!|&|\*|\(|\)|\+|=|\[|\]|{|}|\\|\||\;|:|'|"|~|`|,|\.|\?|>|\/|<)/.test(invite)) return NextResponse.json({error:'Invalid characters',status:500})
 
   // Check invite
-  const check = await checkInvite(invite)
-  if(!check) return NextResponse.json({error:'Invalid code',status:500})
+  const checkInv = await checkInvite(invite)
+  const checkRef = await checkReferral(invite)
+  if(!checkInv && !checkRef) return NextResponse.json({error:'Invalid code',status:500})
   
     // Return result
   return NextResponse.json({ok:true,msg:'Valid code'})

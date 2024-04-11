@@ -52,7 +52,7 @@ export default function InvitePage() {
 
           <div className="flex-col items-center space-y-2 mb-10">
             <p className="text-base text-slate-400">MetaWarrior Army membership is by invite only.</p>
-            <p className="text-base text-slate-400">To find out how to get an invite code and follow along with the community sign up for the <a href="https://www.metawarrior.army/sitrep" className="text-yellow-500 hover:text-yellow-300"><u>SITREP</u></a>.</p>
+            <p className="text-base text-slate-400">To find out how to get an invite code and follow along with the community sign up for the <a href="https://www.metawarrior.army/sitrep" className="text-yellow-500 hover:text-yellow-300 font-bold"><u>SITREP</u></a>.</p>
           </div>
 
           <div className="flex-col w-full mx-auto object-center space-y-7 mt-5 mb-5">

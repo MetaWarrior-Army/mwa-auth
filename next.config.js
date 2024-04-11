@@ -5,7 +5,7 @@ module.exports = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'www.metawarrior.army',
+        hostname: 'www.metawarrior.army', // Project homepage
         port: '',
         pathname: '/**',
       },

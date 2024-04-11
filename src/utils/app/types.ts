@@ -11,7 +11,8 @@ export type MwaUser = {
   num_referrals?: number,
   current_mfa_challenge?: string,
   current_mfa_session?: string,
-  updated_at?: any
+  updated_at?: any,
+  referral_code?: string,
 }
 
 export type AppSessionToken = {
