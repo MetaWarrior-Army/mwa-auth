@@ -2,7 +2,7 @@
 
 import Web3Providers  from '@/app/web3providers'
 import { Page, Header, Frame, Footer } from '@/components/app/layout'
-import { FrameHeader, InfoBanner, Modal } from '@/components/app/page'
+import { FrameHeader, InfoBanner, Modal, TinyDivider } from '@/components/app/page'
 import {VerifyMFAModal} from '@/components/mfa/verify'
 import {RegisterMFAModal} from '@/components/mfa/register'
 import {MAX_MFA_PER_USER} from '@/utils/mfa/constants'
@@ -56,10 +56,17 @@ export default function MfaPage() {
       <Frame>
 
         <Modal>
-          <FrameHeader title="Manage Security Keys"/>
+          <FrameHeader title="Manage MFA Keys"/>
 
           <div className="space-y-6 py-8 text-base leading-7 dark:text-slate-400">
-            <p>Register and verify up to 3 Passkeys or Security Keys.</p>
+            <p><b>Register</b> and <b>verify</b> up to <span className="text-xl text-yellow-500"><b>3</b></span> Passkeys or Security Keys.</p>
+            <p>Registering <span className="text-xl text-yellow-500"><b>1</b></span> key will <b>force</b> you to use it the next time you login.</p>
+            {hasKeys ? 
+              <>
+                <ShowKeyCount keycount={keyCount}/>
+              </> : <></>
+            
+            }
             {(keyCount+1) > MAX_MFA_PER_USER ? <></> :
               <>
                 <RegisterMFAModal onRegister={()=>incrementKeyCount()}/>
@@ -68,10 +75,14 @@ export default function MfaPage() {
             {hasKeys ? 
               <>
                 <VerifyMFAModal/>
-                <ShowKeyCount keycount={keyCount}/>
                 <RevokeAllKeysModal onRevoke={()=>clearKeyCount()}/>
               </> : <></>
             }
+            <TinyDivider/>
+            <p>Multi-Factor Authentication (MFA) secures account from your main credential (your wallet) becoming compromised.</p>
+            <p>You can also use MFA to bind your account to 1-3 devices, password managers, security keys, or a combination thereof.</p>
+            <p>MetaWarrior Army implements the WebAuthn standard which supports most physical security keys. This is our preferred method.</p>
+            <p>Passkeys are also supported. Most browsers and devices support passkeys, as do most password managers installed as extensions in browsers or on mobile phones.</p>
           </div>
           <div className="inline-flex items-center justify-center w-full">
             <hr className="w-64 h-1 my-8 border-0 rounded bg-gray-700"/>

@@ -6,9 +6,9 @@ export function ShowKeyCount({keycount}: {
   return(
     <>
       {(keycount == 1) ?
-        <p className="text-lg">You have <span className="text-yellow-500 font-bold">{keycount}</span> registered security key.</p>
+        <p className="text-lg font-bold">You have <span className="text-yellow-500 text-xl font-bold">{keycount}</span> registered security key.</p>
         :
-        <p className="text-lg">You have <span className="text-yellow-500 font-bold">{keycount}</span> registered security keys.</p>
+        <p className="text-lg font-bold">You have <span className="text-yellow-500 text-xl font-bold">{keycount}</span> registered security keys.</p>
       }
       
     </>
