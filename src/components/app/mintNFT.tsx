@@ -25,7 +25,7 @@ export function MintNFTModal({tokenUri,address,onMint,minted,minting,invite}:{
     address: NFT_CONTRACT_ADDRESS as Address,
     functionName: 'mintNFT',
     args: [address as Address, tokenUri],
-    value: parseEther("0.00"),
+    value: parseEther("0.02"),
   })
   const { data: WaitForTransactionReceiptData, isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({hash})
 
@@ -168,6 +168,11 @@ export function MintNFTModal({tokenUri,address,onMint,minted,minting,invite}:{
           hidden={isConfirmed || isConfirming || txConfirming}
           >
           <p className="text-base text-slate-400 mb-10">You cannot change your username once you mint. Other variables such as Membership Level and your Sign have been predetermined for you. <a className="text-slate-500 hover:text-slate-300" href={'/mint/declineusername?invite='+invite}><u>Go Back</u></a> to choose a different username.</p>
+
+          <div className="flex-col w-full justify-center text-center mb-3">
+            <p className="text-2xl text-slate-400"><span className="text-yellow-500 font-bold">0.02 ETH</span> to mint</p>
+          </div>
+
           <button
             hidden={isConfirmed || isConfirming || txConfirming}
             disabled={isConfirmed || isConfirming}
