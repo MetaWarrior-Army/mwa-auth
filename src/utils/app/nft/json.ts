@@ -17,7 +17,7 @@ export async function generateNftJson({address,username,avatarCID}:{
   const randomSign = await getNftSign()
   const nftJSON = {
     "description": "MetaWarrior Army Membership",
-    "external_url": "https://nft.metawarrior.army/NFTs/"+address+".json",
+    "external_url": "https://auth.metawarrior.army/nfts/"+address+".json",
     "image": "ipfs://"+avatarCID,
     "name": username.toLowerCase(),
     "attributes": [
@@ -27,7 +27,7 @@ export async function generateNftJson({address,username,avatarCID}:{
       },
       {
         "trait_type": "Season",
-        "value": "Development"
+        "value": "Beta"
       },
       {
         "trait_type": "Operation",
@@ -36,7 +36,7 @@ export async function generateNftJson({address,username,avatarCID}:{
       },
       {
         "trait_type": "Membership Level",
-        "value": "Founder"
+        "value": "Beta"
       },
       {
         "trait_type":"Sign",
