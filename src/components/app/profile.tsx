@@ -67,7 +67,7 @@ export function ProfileModal({nftCID, avatarCID, nftTx, nftId, referral}:{
           <p className="text-base text-slate-400"><a href={'https://sepolia.etherscan.io/tx/'+nftTx} target="_blank"><u>Transaction</u></a></p>
           <div className="w-full flex justify-between text-right">
             <p className="text-base text-slate-400">View on <a href={'https://testnets.opensea.io/assets/sepolia/'+NFT_CONTRACT_ADDRESS+'/'+nftId} target="_blank"><u>OpenSea</u></a></p>
-            <p className="text-xl">❔</p>
+            <p className="text-xl"><a href="https://discourse.metawarrior.army/t/metawarrior-army-membership-nft/31" target="_blank">❔</a></p>
           </div>
         </div>
       </>
