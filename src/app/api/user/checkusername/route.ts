@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
   if(username.length < USERNAME_MIN_LENGTH || username.length > USERNAME_MAX_LENGTH) return NextResponse.json({error:'Improper length',status:500})
 
   // Verify valid characters
-  if(/(#|\$|\^|%|@|!|&|\*|\(|\)|\+|=|\[|\]|{|}|\\|\||\;|:|'|"|~|`|,|\.|\?|>|\/|<)/.test(username)) return NextResponse.json({error:'Invalid characters in username.',status:500})
+  if(/(#|\$|\^|%|@|!|&|\*|\(|\)|\+|=|\[|\]|{|}|\\|\||\;|:|'|"|~|`|,|\.|\?|>|\/|<| )/.test(username)) return NextResponse.json({error:'Invalid characters in username.',status:500})
 
   // Check blocked usernames
   if(BLOCKED_USERNAMES.includes(username)) return NextResponse.json({error:'Username unavailable.',status:500})

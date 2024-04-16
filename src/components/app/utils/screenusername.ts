@@ -18,7 +18,7 @@ export async function screenUsername(username: string){
     return {ok:false,msg:'Username is too long.'}
   }
   // Screen invalid characters
-  if(/(#|\$|\^|%|@|!|&|\*|\(|\)|\+|=|\[|\]|{|}|\\|\||\;|:|'|"|~|`|,|\.|\?|>|\/|<)/.test(usernameLowered)) return {ok:false,msg:'Invalid characters in username.'}
+  if(/(#|\$|\^|%|@|!|&|\*|\(|\)|\+|=|\[|\]|{|}|\\|\||\;|:|'|"|~|`|,|\.|\?|>|\/|<| )/.test(usernameLowered)) return {ok:false,msg:'Invalid characters in username.'}
 
   // Check static list of reserved usernames
   if(BLOCKED_USERNAMES.includes(usernameLowered)) return {ok:false,msg:'Username unavailable.'}
