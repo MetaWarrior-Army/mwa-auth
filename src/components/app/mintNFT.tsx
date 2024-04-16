@@ -147,7 +147,7 @@ export function MintNFTModal({tokenUri,address,onMint,minted,minting,invite}:{
         </div>
       </> : <></>
     }
-    {simError ? 
+    {(simError && !mintFinished) ? 
       <>
         <div className="flex-col w-full justify-between mt-5 mb-3 text-wrap space-y-3">
           <div>
